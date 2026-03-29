@@ -21,11 +21,17 @@ const HomeCourses = async () => {
           Browse All <ArrowRightIcon className='h-4 w-4' />
         </Link>
       </div>
-      <div className='grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4'>
-        {courses?.map((course) => (
-          <CourseCard key={course.id} course={course} />
-        ))}
-      </div>
+      {courses && courses.length > 0 ? (
+        <div className='grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-4'>
+          {courses.map((course) => (
+            <CourseCard key={course.id} course={course} />
+          ))}
+        </div>
+      ) : (
+        <div className='flex items-center justify-center p-12 bg-muted/50 rounded-lg'>
+          <p className='text-muted-foreground'>No courses have been added yet.</p>
+        </div>
+      )}
     </section>
   );
 };

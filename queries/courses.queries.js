@@ -1,10 +1,7 @@
 'use server';
 
 import { auth } from '@/auth';
-import {
-  replaceMongoIdInArray,
-  replaceMongoIdInObject,
-} from '@/lib/convertDBData';
+import { replaceMongoIdInArray, replaceMongoIdInObject } from '@/lib/convertDBData';
 import { Category } from '@/models/category.model';
 import { Course } from '@/models/course.model';
 import { Enrollment } from '@/models/enrollment.model';
@@ -27,7 +24,7 @@ export const createCourse = async (payload) => {
 
 export const getEnrollmentData = async () => {
   const session = await auth();
-  const user = await User.findOne({ email: session?.user?.email });
+  const user = await User.findOne({ email: session?.user?.email }).lean();
 
   const enrollments = await Enrollment.find({ student: user._id })
     .populate({
@@ -51,6 +48,7 @@ export const getEnrollmentData = async () => {
 };
 
 export const getCourseList = async ({ queries, filter }) => {
+  const session = await auth();
   const options = {
     sortBy: '-createdAt',
   };
@@ -70,6 +68,10 @@ export const getCourseList = async ({ queries, filter }) => {
       { 'instructor.name': { $regex: queries.search, $options: 'i' } },
       { 'category.name': { $regex: queries.search, $options: 'i' } },
     ];
+  }
+
+  if (session?.user?.id) {
+    searchFilter.instructor = { $ne: session.user.id };
   }
 
   let courses = await Course.find(searchFilter)
@@ -95,7 +97,6 @@ export const getCourseList = async ({ queries, filter }) => {
     .lean();
 
   // Add enrollment status for logged in users
-  const session = await auth();
   if (!session?.user) return replaceMongoIdInArray(courses);
 
   let enrolledCourses = await getEnrollmentData();
@@ -104,8 +105,7 @@ export const getCourseList = async ({ queries, filter }) => {
   });
 
   courses = courses?.map((course) => {
-    if (enrolledCourseIds.includes(course._id.toString()))
-      return { ...course, enrolled: true };
+    if (enrolledCourseIds.includes(course._id.toString())) return { ...course, enrolled: true };
     return course;
   });
 
@@ -150,10 +150,7 @@ export const getCourseDetails = async (id) => {
   if (!session?.user) return replaceMongoIdInObject(course);
 
   let enrolledCourses = await getEnrollmentData();
-  let isEnrolledToCourse = enrolledCourses.some(
-    (enrollment) =>
-      enrollment?.course?._id?.toString() === course._id.toString(),
-  );
+  let isEnrolledToCourse = enrolledCourses.some((enrollment) => enrollment?.course?._id?.toString() === course._id.toString());
 
   if (isEnrolledToCourse) course.enrolled = true;
 
@@ -168,7 +165,7 @@ export const getCoursesByInstructor = async (instructorId) => {
   return replaceMongoIdInArray(coursesByInstructor);
 };
 
-export const getCourseInstructorStats = async (instructorId, expand) => {
+export const getCourseInstructorStats = async (instructorId) => {
   const instructor = await getUserById(instructorId);
   let coursesByInstructor = await getCoursesByInstructor(instructorId);
   const courseIds = coursesByInstructor.map((c) => c.id);
@@ -180,21 +177,13 @@ export const getCourseInstructorStats = async (instructorId, expand) => {
     model: Course,
   });
 
-  const revenue = enrollments.reduce(
-    (acc, curr) => acc + curr?.course?.price,
-    0,
-  );
+  const revenue = enrollments.reduce((acc, curr) => acc + curr?.course?.price, 0);
 
   const totalReviews = await Testimonial.find({
     courseId: { $in: courseIds },
   });
 
-  const averageReviews = Number(
-    (
-      totalReviews.reduce((acc, curr) => acc + curr.rating, 0) /
-      totalReviews.length
-    ).toFixed(1),
-  );
+  const averageReviews = Number((totalReviews.reduce((acc, curr) => acc + curr.rating, 0) / (totalReviews.length || 1)).toFixed(1));
 
   // Add enrollment status for logged in users
   const session = await auth();
@@ -205,24 +194,18 @@ export const getCourseInstructorStats = async (instructorId, expand) => {
     });
 
     coursesByInstructor = coursesByInstructor?.map((course) => {
-      if (enrolledCourseIds.includes(course.id.toString()))
-        return { ...course, enrolled: true };
+      if (enrolledCourseIds.includes(course.id.toString())) return { ...course, enrolled: true };
       return course;
     });
-  }
-  if (expand) {
-    return {
-      coursesByInstructor,
-      students: enrollments,
-      reviews: totalReviews,
-    };
   }
 
   return {
     ...instructor,
-    coursesByInstructor,
+    courses: coursesByInstructor,
+    enrollments,
+    reviews: totalReviews,
     students: enrollments.length,
-    reviews: totalReviews.length,
+    reviewsCount: totalReviews.length,
     averageReviews,
     revenue,
   };

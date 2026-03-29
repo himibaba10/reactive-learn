@@ -99,10 +99,10 @@ export const LessonForm = ({ moduleId, initialLessons = [] }) => {
   };
 
   return (
-    <div className='relative mt-6 border bg-slate-100 rounded-md p-4'>
+    <div className='relative mt-6 border bg-muted rounded-md p-4'>
       {/* Loading overlay while reordering */}
       {isUpdating && (
-        <div className='absolute h-full w-full bg-gray-500/20 top-0 right-0 rounded-md flex items-center justify-center z-10'>
+        <div className='absolute h-full w-full bg-muted/50 top-0 right-0 rounded-md flex items-center justify-center z-10'>
           <Loader2 className='animate-spin h-6 w-6 text-sky-700' />
         </div>
       )}
@@ -157,7 +157,7 @@ export const LessonForm = ({ moduleId, initialLessons = [] }) => {
         <div
           className={cn(
             'text-sm mt-2',
-            !lessons?.length && 'text-slate-500 italic',
+            !lessons?.length && 'text-muted-foreground italic',
           )}
         >
           {!lessons?.length && 'No lessons yet'}

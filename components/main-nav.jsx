@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { Logo } from './logo';
 import NavbarDropdown from './navbar-dropdown';
+import { ModeToggle } from './mode-toggle';
 import { Button, buttonVariants } from './ui/button';
 import {
   DropdownMenu,
@@ -15,6 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
+
 export function MainNav({ items, children }) {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const { loggedInUser } = useLoggedinUser();
@@ -30,7 +32,7 @@ export function MainNav({ items, children }) {
                 key={index}
                 href={item.disabled ? '#' : item.href}
                 className={cn(
-                  'flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm',
+                  'flex items-center text-lg font-medium transition-all hover:text-primary hover:-translate-y-0.5 sm:text-sm',
                 )}
               >
                 {item.title}
@@ -44,6 +46,7 @@ export function MainNav({ items, children }) {
         )}
       </div>
       <nav className='flex items-center gap-3'>
+        <ModeToggle />
         <div className='items-center gap-3 hidden lg:flex'>
           {!loggedInUser && (
             <>

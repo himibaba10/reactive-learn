@@ -8,6 +8,7 @@ import { CategoryForm } from './_components/category-form';
 import CourseDashboardActions from './_components/course-dashboard-actions';
 import { DescriptionForm } from './_components/description-form';
 import { ImageForm } from './_components/image-form';
+import { LearningForm } from './_components/learning-form';
 import { ModulesForm } from './_components/module-form';
 import { PriceForm } from './_components/price-form';
 import { QuizSetForm } from './_components/quiz-set-form';
@@ -53,6 +54,10 @@ export default async function EditCoursePage({ params: { courseId } }) {
             />
             <DescriptionForm
               initialData={{ description: course?.description }}
+              courseId={course?._id}
+            />
+            <LearningForm
+              initialData={{ learning: course?.learning }}
               courseId={course?._id}
             />
             <ImageForm

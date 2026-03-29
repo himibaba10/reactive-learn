@@ -45,7 +45,7 @@ export const ModuleList = ({ items, onReorder, onEdit }) => {
                 {(provided) => (
                   <div
                     className={cn(
-                      'flex items-center gap-x-2 bg-slate-200 border-slate-200 border text-slate-700 rounded-md mb-4 text-sm',
+                      'flex items-center gap-x-2 bg-secondary border-slate-200 border text-foreground rounded-md mb-4 text-sm',
                       module?.status === 'active' &&
                         'bg-sky-100 border-sky-200 text-sky-700',
                     )}
@@ -66,7 +66,7 @@ export const ModuleList = ({ items, onReorder, onEdit }) => {
                     <div className='ml-auto pr-2 flex items-center gap-x-2'>
                       <Badge
                         className={cn(
-                          'bg-gray-500',
+                          'bg-secondary text-secondary-foreground',
                           module?.status === 'active' && 'bg-emerald-600',
                         )}
                       >

@@ -44,66 +44,38 @@ const Quiz = ({ quiz: initialQuiz, quizSetId }) => {
   };
 
   return (
-    <div className='bg-gray-50 shadow-md p-4 lg:p-6 rounded-md border'>
+    <div className='bg-muted shadow-md p-4 lg:p-6 rounded-md border'>
       {isEditing ? (
-        <QuizEditForm
-          quiz={quiz}
-          onCancel={() => setIsEditing(false)}
-          onUpdate={(updated) => setQuiz(updated)}
-        />
+        <QuizEditForm quiz={quiz} onCancel={() => setIsEditing(false)} onUpdate={(updated) => setQuiz(updated)} />
       ) : (
         <>
           <h2 className='mb-3'>{quiz.question}</h2>
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
             {quiz.options.map((option) => (
-              <div
-                className={cn(
-                  'py-1.5 rounded-sm text-sm flex items-center gap-1 text-gray-600',
-                )}
-                key={option.text}
-              >
-                {option.is_correct ? (
-                  <CircleCheck className='size-4 text-emerald-500' />
-                ) : (
-                  <Circle className='size-4' />
-                )}
-                <p>{option.text}</p>
+              <div className={cn('py-1.5 rounded-sm text-sm flex items-center gap-1 text-gray-600')} key={option.text}>
+                {option.is_correct ? <CircleCheck className='size-4 text-emerald-500' /> : <Circle className='size-4' />}
+                <p className='text-muted-foreground'>{option.text}</p>
               </div>
             ))}
           </div>
           <div className='flex items-center justify-end gap-2 mt-6'>
-            <Button
-              variant='ghost'
-              size='sm'
-              onClick={() => setIsEditing(true)}
-            >
+            <Button variant='ghost' size='sm' onClick={() => setIsEditing(true)}>
               <Pencil className='w-3 mr-1' /> Edit
             </Button>
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button
-                  size='sm'
-                  className='text-destructive'
-                  variant='ghost'
-                  disabled={isDeleting}
-                >
+                <Button size='sm' className='text-destructive' variant='ghost' disabled={isDeleting}>
                   <Trash className='w-3 mr-1' /> Delete
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete Quiz?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    this quiz.
-                  </AlertDialogDescription>
+                  <AlertDialogDescription>This action cannot be undone. This will permanently delete this quiz.</AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={handleDelete}
-                    className='bg-destructive'
-                  >
+                  <AlertDialogAction onClick={handleDelete} className='bg-destructive'>
                     {isDeleting ? 'Deleting...' : 'Delete'}
                   </AlertDialogAction>
                 </AlertDialogFooter>

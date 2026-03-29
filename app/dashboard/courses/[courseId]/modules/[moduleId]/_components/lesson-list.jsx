@@ -58,7 +58,7 @@ export const LessonList = ({ items, onReorder, onEdit }) => {
                 {(provided) => (
                   <div
                     className={cn(
-                      'flex items-center gap-x-2 bg-slate-200 border-slate-200 border text-slate-700 rounded-md mb-4 text-sm',
+                      'flex items-center gap-x-2 bg-secondary border-slate-200 border text-foreground rounded-md mb-4 text-sm',
                       lesson.published && // ✅ published not isPublished
                         'bg-sky-100 border-sky-200 text-sky-700',
                     )}
@@ -82,7 +82,7 @@ export const LessonList = ({ items, onReorder, onEdit }) => {
                     <div className='ml-auto pr-2 flex items-center gap-x-2'>
                       <Badge
                         className={cn(
-                          'bg-slate-500',
+                          'bg-secondary text-secondary-foreground',
                           lesson.published && 'bg-emerald-600', // ✅ published
                         )}
                       >

@@ -196,7 +196,7 @@ export default function QuizModal({
                     }
                   />
                   <Label
-                    className={`border rounded px-2 py-3 block cursor-pointer hover:bg-gray-50 transition-all font-normal
+                    className={`border rounded px-2 py-3 block cursor-pointer hover:bg-muted transition-all font-normal
                     ${
                       viewMode
                         ? getOptionClasses(option, optionIndex)

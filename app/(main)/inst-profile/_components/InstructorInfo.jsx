@@ -7,16 +7,16 @@ const InstructorInfo = ({ instructor }) => {
     lastName,
     profilePicture,
     designation,
-    coursesByInstructor,
+    courses,
     students,
-    reviews,
+    reviewsCount,
     averageReviews,
     bio,
   } = instructor || {};
   const fullName = `${firstName} ${lastName}`;
   return (
     <div className='col-span-12 lg:col-span-4 '>
-      <div className='bg-white rounded-2xl p-6 shadow'>
+      <div className='bg-background rounded-2xl p-6 shadow'>
         <div className='mb-6'>
           <div className='w-36 h-36 rounded-full  mb-5 mx-auto overflow-hidden'>
             <Image
@@ -36,7 +36,7 @@ const InstructorInfo = ({ instructor }) => {
             <ul className=' items-center gap-3 flex-wrap text-sm text-gray-600 font-medium grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 md:grid-cols-4'>
               <li className='flex items-center space-x-3'>
                 <Presentation className='text-gray-600 w-4' />
-                <div>{coursesByInstructor?.length ?? 0} Courses</div>
+                <div>{courses?.length ?? 0} Courses</div>
               </li>
               <li className='flex items-center space-x-3'>
                 <UsersRound className='text-gray-600 w-4' />
@@ -44,7 +44,7 @@ const InstructorInfo = ({ instructor }) => {
               </li>
               <li className='flex items-center space-x-3'>
                 <MessageSquare className='text-gray-600 w-4' />
-                <div>{reviews} Reviews</div>
+                <div>{reviewsCount} Reviews</div>
               </li>
               <li className='flex items-center space-x-3'>
                 <Star className='text-gray-600 w-4' />

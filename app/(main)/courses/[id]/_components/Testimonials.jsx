@@ -29,7 +29,7 @@ const Testimonials = ({ testimonials }) => {
                 className='md:basis-1/2 lg:basis-1/3'
               >
                 <div className='sm:break-inside-avoid h-full'>
-                  <blockquote className='rounded-lg bg-gray-50 p-6  sm:p-8 shadow-sm h-full'>
+                  <blockquote className='rounded-lg bg-muted p-6  sm:p-8 shadow-sm h-full'>
                     <div className='flex items-center gap-4'>
                       <Image
                         alt=''
@@ -51,7 +51,7 @@ const Testimonials = ({ testimonials }) => {
                         </div>
                       </div>
                     </div>
-                    <p className='mt-4 text-gray-700'>{testimonial?.content}</p>
+                    <p className='mt-4 text-foreground'>{testimonial?.content}</p>
                   </blockquote>
                 </div>
               </CarouselItem>

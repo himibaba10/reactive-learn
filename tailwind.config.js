@@ -65,7 +65,9 @@ module.exports = {
   		},
   		fontFamily: {
   			inter: 'var(--font-inter)',
-  			poppins: 'var(--font-poppins)'
+  			poppins: 'var(--font-poppins)',
+  			heading: 'var(--font-ubuntu)',
+  			sans: 'var(--font-open-sans)',
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

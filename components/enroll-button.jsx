@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { ArrowRight } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import { Button, buttonVariants } from './ui/button';
 
 const EnrollButton = ({ asLink, courseId, courseTitle, coursePrice }) => {
@@ -18,8 +19,20 @@ const EnrollButton = ({ asLink, courseId, courseTitle, coursePrice }) => {
       return router.push('/login');
     }
 
-    const { url } = await createCheckoutSession(formData);
-    window.location.assign(url);
+    try {
+      const sessionResponse = await createCheckoutSession(formData);
+      
+      if (sessionResponse?.error) {
+        toast.error(sessionResponse.error);
+        return;
+      }
+      
+      if (sessionResponse?.url) {
+        window.location.assign(sessionResponse.url);
+      }
+    } catch (err) {
+      toast.error(err.message || 'An error occurred during checkout');
+    }
   };
 
   return (

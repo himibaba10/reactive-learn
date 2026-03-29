@@ -6,37 +6,39 @@ import Link from 'next/link';
 const Hero = async () => {
   const session = await auth();
   return (
-    <section className='space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32 grainy'>
-      <div className='container flex max-w-[64rem] flex-col items-center gap-4 text-center relative isolate'>
-        <div
-          aria-hidden='true'
-          className='pointer-events-none absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80'
-        >
-          <div
-            style={{
-              clipPath:
-                'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
-            }}
-            className='relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]'
-          />
-        </div>
-        <span className='rounded-2xl bg-muted px-4 py-1.5 text-sm font-medium border shadow-lg'>
-          Hey, Welcome
+    <section className='relative w-full min-h-[85vh] flex items-center justify-center overflow-hidden'>
+      {/* Background Image */}
+      <div 
+        className='absolute inset-0 z-0'
+        style={{
+          backgroundImage: "url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      />
+      {/* Dark Overlay */}
+      <div className='absolute inset-0 bg-black/60 z-0' />
+
+      {/* Content */}
+      <div className='container relative z-10 flex flex-col items-center justify-center text-center gap-6 px-4 py-20 mt-10'>
+        <span className='rounded-full bg-primary/30 text-primary-foreground border border-primary/40 backdrop-blur-md px-6 py-2 text-sm font-medium shadow-2xl tracking-wide'>
+          Hey, Welcome to Reactive Learn
         </span>
-        <h1 className='font-heading text-3xl font-bold sm:text-5xl md:text-6xl lg:text-7xl'>
-          Learn Today, Lead Tomorrow.
+        <h1 className='font-heading text-4xl font-bold sm:text-5xl md:text-6xl lg:text-7xl text-white max-w-4xl drop-shadow-lg'>
+          Learn Today, Lead The Future.
         </h1>
-        <p className='max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8'>
-          “You don’t understand anything until you learn it more than one way.”
+        <p className='max-w-[42rem] mx-auto leading-relaxed text-slate-200 sm:text-xl sm:leading-8 drop-shadow'>
+          “You don’t understand anything until you learn it more than one way.” Discover a world of knowledge with our premium interactive learning platform.
         </p>
-        <div className='flex items-center gap-3 flex-wrap justify-center'>
-          <Link href='/courses' className={cn(buttonVariants({ size: 'lg' }))}>
+        <div className='flex items-center gap-4 flex-wrap justify-center mt-8'>
+          <Link href='/courses' className={cn(buttonVariants({ size: 'lg' }), 'shadow-xl px-8')}>
             Explore Now
           </Link>
           {!session?.user && (
             <Link
               href='/register/instructor'
-              className={cn(buttonVariants({ variant: 'outline', size: 'lg' }))}
+              className={cn(buttonVariants({ variant: 'outline', size: 'lg' }), 'bg-background/10 text-white border-white/20 hover:bg-background/20 hover:text-white backdrop-blur-sm shadow-xl px-8')}
             >
               Become An Instructor
             </Link>

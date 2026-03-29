@@ -39,7 +39,12 @@ export default auth((req) => {
     return Response.redirect(new URL('/', nextUrl));
   }
 
-  if (role === 'teacher' && !isTeachersRoute) {
+  if (
+    role === 'teacher' &&
+    !isTeachersRoute &&
+    !isPublicRoute &&
+    !pathname.startsWith('/enroll-success')
+  ) {
     return Response.redirect(new URL('/dashboard', nextUrl));
   }
 });

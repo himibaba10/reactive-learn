@@ -93,7 +93,7 @@ const RelatedCourses = () => {
                         Development
                       </p>
                       <div className='my-3 flex items-center gap-x-2 text-sm md:text-xs'>
-                        <div className='flex items-center gap-x-1 text-slate-500'>
+                        <div className='flex items-center gap-x-1 text-muted-foreground'>
                           <div>
                             <BookOpen className='w-4' />
                           </div>
@@ -102,7 +102,7 @@ const RelatedCourses = () => {
                       </div>
 
                       <div className='flex items-center justify-between mt-4'>
-                        <p className='text-md md:text-sm font-medium text-slate-700'>
+                        <p className='text-md md:text-sm font-medium text-foreground'>
                           {formatPrice(49)}
                         </p>
 

@@ -56,7 +56,7 @@ export const LessonAccessForm = ({ initialData, lessonId }) => {
   };
 
   return (
-    <div className='mt-6 border bg-slate-100 rounded-md p-4'>
+    <div className='mt-6 border bg-muted rounded-md p-4'>
       <div className='font-medium flex items-center justify-between'>
         Lesson access
         <Button variant='ghost' onClick={toggleEdit}>
@@ -74,7 +74,7 @@ export const LessonAccessForm = ({ initialData, lessonId }) => {
         <p
           className={cn(
             'text-sm mt-2',
-            currentAccess !== 'public' && 'text-slate-500 italic',
+            currentAccess !== 'public' && 'text-muted-foreground italic',
           )}
         >
           {currentAccess === 'public' ? (

@@ -8,37 +8,37 @@ const CourseCard = ({ course }) => {
   const courseId = course?.id ?? course?._id;
 
   return (
-    <div className='group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full'>
+    <div className='group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden border rounded-xl bg-background h-full flex flex-col'>
       <Link
         href={`/courses/${courseId}`}
-        className='block relative w-full aspect-video rounded-md overflow-hidden'
+        className='block relative w-full aspect-video overflow-hidden'
       >
         <Image
           src={`/assets/images/courses/${course?.thumbnail}`}
           alt={course?.title}
-          className='object-cover'
+          className='object-cover transition-transform duration-500 group-hover:scale-105'
           fill
           sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
         />
       </Link>
-      <div className='flex flex-col pt-2'>
-        <div className='text-lg md:text-base font-medium group-hover:text-sky-700 line-clamp-2'>
+      <div className='flex flex-col p-4 flex-1'>
+        <div className='font-heading text-lg md:text-xl font-semibold group-hover:text-primary transition-colors line-clamp-2'>
           <Link href={`/courses/${courseId}`}>{course?.title}</Link>
         </div>
-        <p className='text-xs text-muted-foreground'>
+        <p className='text-xs font-medium text-secondary bg-secondary/10 px-2 py-1 rounded inline-block w-fit mt-2'>
           {course?.category?.title}
         </p>
-        <div className='my-3 flex items-center gap-x-2 text-sm md:text-xs'>
-          <div className='flex items-center gap-x-1 text-slate-500'>
-            <div>
-              <BookOpen className='w-4' />
+        <div className='mt-4 flex items-center gap-x-2 text-sm text-muted-foreground'>
+          <div className='flex items-center gap-x-1.5'>
+            <div className='p-1.5 rounded-full bg-primary/10 text-primary'>
+              <BookOpen className='w-4 h-4' />
             </div>
             <span>{course?.modules?.length} Chapters</span>
           </div>
         </div>
 
-        <div className='flex items-center justify-between mt-4'>
-          <p className='text-md md:text-sm font-medium text-slate-700'>
+        <div className='flex items-center justify-between mt-auto pt-4 border-t mt-4'>
+          <p className='text-lg font-bold text-foreground'>
             {formatPrice(course?.price)}
           </p>
 
@@ -51,7 +51,7 @@ const CourseCard = ({ course }) => {
             />
           ) : (
             <Link
-              className='text-sm font-medium group-hover:text-sky-700 underline'
+              className='text-sm font-medium text-primary hover:underline'
               href={`/courses/${courseId}/lesson`}
             >
               Go to Lesson

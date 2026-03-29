@@ -56,7 +56,7 @@ export const columns = [
 
       return (
         <Badge
-          className={cn('bg-gray-500', status === 'active' && 'bg-emerald-700')}
+          className={cn('bg-secondary text-secondary-foreground', status === 'active' && 'bg-emerald-700')}
         >
           {status === 'active' ? 'Published' : 'Unpublished'}
         </Badge>

@@ -9,15 +9,23 @@ async function EnrolledCoursesPage() {
   const user = await getUserByEmail(session?.user?.email);
 
   return (
-    <div className='grid sm:grid-cols-2 gap-6'>
-      {enrollments?.map((enrollment) => (
-        <EnrolledCourseCard
-          key={enrollment.id}
-          enrollment={enrollment}
-          studentId={user?.id}
-        />
-      ))}
-    </div>
+    <>
+      {enrollments && enrollments.length > 0 ? (
+        <div className='grid sm:grid-cols-2 gap-6'>
+          {enrollments.map((enrollment) => (
+            <EnrolledCourseCard
+              key={enrollment.id}
+              enrollment={enrollment}
+              studentId={user?.id}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className='flex items-center justify-center p-8 bg-muted/50 rounded-lg'>
+          <p className='text-muted-foreground'>You did not purchase any course yet.</p>
+        </div>
+      )}
+    </>
   );
 }
 

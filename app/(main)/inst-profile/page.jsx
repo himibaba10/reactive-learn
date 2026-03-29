@@ -11,7 +11,7 @@ const InstructorProfilePage = async ({ searchParams: { instructorId } }) => {
         {/* Instructor Info */}
         <InstructorInfo instructor={instructor} />
         {/* Courses */}
-        <CoursesByInstructor courses={instructor?.coursesByInstructor} />
+        <CoursesByInstructor courses={instructor?.courses} />
       </div>
     </section>
   );

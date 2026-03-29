@@ -57,7 +57,7 @@ export const CategoryForm = ({ initialData, courseId }) => {
   );
 
   return (
-    <div className='mt-6 border bg-gray-50 rounded-md p-4'>
+    <div className='mt-6 border bg-muted rounded-md p-4'>
       <div className='font-medium flex items-center justify-between'>
         Course Category
         <Button variant='ghost' onClick={toggleEdit}>
@@ -75,7 +75,7 @@ export const CategoryForm = ({ initialData, courseId }) => {
         <p
           className={cn(
             'text-sm mt-2',
-            !initialData.category && 'text-slate-500 italic',
+            !initialData.category && 'text-muted-foreground italic',
           )}
         >
           {selectedOptions?.title || 'No category'}

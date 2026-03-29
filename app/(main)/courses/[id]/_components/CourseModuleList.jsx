@@ -9,7 +9,7 @@ import ModuleLessonList from './ModuleLessonList';
 const CourseModuleList = ({ module }) => {
   let moduleDuration = 0;
   module?.lessonIds?.forEach((lesson) => {
-    moduleDuration = moduleDuration + lesson?.duration;
+    moduleDuration = moduleDuration + (lesson?.duration || 0);
   });
 
   return (
@@ -20,11 +20,11 @@ const CourseModuleList = ({ module }) => {
         <div className='flex gap-x-5 items-center flex-wrap mt-4 mb-6 text-gray-600 text-sm'>
           <span className='flex items-center gap-1.5'>
             <Video className='w-4 h-4' />
-            {(moduleDuration / 3600).toPrecision(2)} Hours
+            {((moduleDuration || 0) / 3600).toPrecision(2)} Hours
           </span>
           <span className='flex items-center gap-1.5'>
             <NotepadText className='w-4 h-4' />
-            {module?.lessonIds?.length} Lessons
+            {module?.lessonIds?.length || 0} Lessons
           </span>
         </div>
         {/* header ends */}

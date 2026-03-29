@@ -65,7 +65,7 @@ const FilterCourse = ({ categories = [] }) => {
       <Accordion defaultValue={['categories']} type='multiple'>
         {/* Categories filter */}
         <AccordionItem value='categories'>
-          <AccordionTrigger className='py-3 text-sm text-gray-400 hover:text-gray-500'>
+          <AccordionTrigger className='py-3 text-sm text-gray-400 hover:text-muted-foreground'>
             <span className='font-medium text-gray-900'>
               Categories ({categories?.length})
             </span>

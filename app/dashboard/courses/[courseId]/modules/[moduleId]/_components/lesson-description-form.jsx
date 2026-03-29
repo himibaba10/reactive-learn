@@ -55,7 +55,7 @@ export const LessonDescriptionForm = ({ initialData, lessonId }) => {
   };
 
   return (
-    <div className='mt-6 border bg-slate-100 rounded-md p-4'>
+    <div className='mt-6 border bg-muted rounded-md p-4'>
       <div className='font-medium flex items-center justify-between'>
         Chapter Description
         <Button variant='ghost' onClick={toggleEdit}>
@@ -73,7 +73,7 @@ export const LessonDescriptionForm = ({ initialData, lessonId }) => {
         <div
           className={cn(
             'text-sm mt-2',
-            !currentDescription && 'text-slate-500 italic',
+            !currentDescription && 'text-muted-foreground italic',
           )}
         >
           {!currentDescription && 'No description'}

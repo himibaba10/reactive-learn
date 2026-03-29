@@ -32,9 +32,11 @@ export const getAReport = async ({ courseId, studentId }) => {
   const otherMarks = report?.quizAssessment?.otherMarks ?? 0;
   const completedModules = report?.totalCompletedModules?.length ?? 0;
 
-  const moduleCompletionProgress = Number(
-    ((completedModules / report?.course?.modules?.length) * 100).toFixed(2),
-  );
+  const totalModules = report?.course?.modules?.length || 0;
+  
+  const moduleCompletionProgress = totalModules > 0
+    ? Number(((completedModules / totalModules) * 100).toFixed(2))
+    : 0;
 
   return {
     ...replaceMongoIdInObject(report),

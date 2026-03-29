@@ -8,7 +8,7 @@ import useAccount from '@/hooks/use-account';
 const PersonalDetails = ({ user }) => {
   const { formAction } = useAccount('update-personal-detail');
   return (
-    <div className='p-6 rounded-md shadow dark:shadow-gray-800 bg-white dark:bg-slate-900'>
+    <div className='p-6 rounded-md shadow dark:shadow-gray-800 bg-background dark:bg-slate-900'>
       <h5 className='text-lg font-semibold mb-4'>Personal Detail :</h5>
       <form action={formAction}>
         <div className='grid lg:grid-cols-2 grid-cols-1 gap-5'>

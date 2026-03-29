@@ -96,13 +96,13 @@ const FilterCourseMobile = () => {
         <SheetTrigger>
           <Filter className='h-6 w-6' />
         </SheetTrigger>
-        <SheetContent side='left'>
+        <SheetContent side='left' className="z-[100]">
           <SheetHeader>
             <SheetTitle className='text-left'>Filter Courses</SheetTitle>
             <Accordion defaultValue={['categories']} type='multiple'>
               {/* Categories filter */}
               <AccordionItem value='categories'>
-                <AccordionTrigger className='py-3 text-sm text-gray-400 hover:text-gray-500'>
+                <AccordionTrigger className='py-3 text-sm text-gray-400 hover:text-muted-foreground'>
                   <span className='font-medium text-gray-900'>Categories</span>
                 </AccordionTrigger>
 
@@ -134,7 +134,7 @@ const FilterCourseMobile = () => {
               </AccordionItem>
               {/* Price filter */}
               <AccordionItem value='price'>
-                <AccordionTrigger className='py-3 text-sm text-gray-400 hover:text-gray-500'>
+                <AccordionTrigger className='py-3 text-sm text-gray-400 hover:text-muted-foreground'>
                   <span className='font-medium text-gray-900'>Price</span>
                 </AccordionTrigger>
 

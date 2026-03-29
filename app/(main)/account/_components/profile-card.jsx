@@ -11,7 +11,7 @@ const ProfileCard = async ({ tabs }) => {
     <div className='lg:flex'>
       <div className='lg:w-1/4 md:px-3'>
         <div className='relative'>
-          <div className='p-6 rounded-md shadow dark:shadow-gray-800 bg-white dark:bg-slate-900'>
+          <div className='p-6 rounded-md shadow dark:shadow-gray-800 bg-background dark:bg-slate-900'>
             <div className='profile-pic text-center mb-5'>
               <div>
                 <ProfilePicture

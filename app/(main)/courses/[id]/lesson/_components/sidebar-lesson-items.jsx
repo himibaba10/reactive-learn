@@ -26,8 +26,8 @@ export const SidebarLessonItem = ({
     <Link
       href={`/courses/${courseId}/lesson?name=${lesson?.slug}&module=${moduleId}`}
       className={cn(
-        'flex items-center gap-x-2 text-slate-500 text-sm font-[500] transition-all hover:text-slate-600 p-2 rounded-md',
-        isActive && 'text-slate-700 hover:text-slate-700 bg-gray-100',
+        'flex items-center gap-x-2 text-muted-foreground text-sm font-[500] transition-all hover:text-slate-600 p-2 rounded-md',
+        isActive && 'text-foreground hover:text-foreground bg-gray-100',
         isCompleted && 'text-emerald-700 hover:text-emerald-700',
       )}
     >
@@ -35,8 +35,8 @@ export const SidebarLessonItem = ({
         <CheckCircle
           size={16}
           className={cn(
-            'text-slate-500',
-            isActive && 'text-slate-700',
+            'text-muted-foreground',
+            isActive && 'text-foreground',
             isCompleted && 'text-emerald-700',
           )}
         />

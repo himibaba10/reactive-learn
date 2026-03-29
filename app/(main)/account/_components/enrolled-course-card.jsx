@@ -38,7 +38,7 @@ const EnrolledCourseCard = async ({ enrollment, studentId }) => {
           {course?.category?.title}
         </p>
         <div className='my-3 flex items-center gap-x-2 text-sm md:text-xs'>
-          <div className='flex items-center gap-x-1 text-slate-500'>
+          <div className='flex items-center gap-x-1 text-muted-foreground'>
             <div>
               <BookOpen className='w-4' />
             </div>
@@ -47,49 +47,49 @@ const EnrolledCourseCard = async ({ enrollment, studentId }) => {
         </div>
         <div className=' border-b pb-2 mb-2'>
           <div className='flex items-center justify-between'>
-            <p className='text-md md:text-sm font-medium text-slate-700'>
+            <p className='text-md md:text-sm font-medium text-foreground'>
               Total Modules: {course?.modules?.length}
             </p>
-            <div className='text-md md:text-sm font-medium text-slate-700'>
+            <div className='text-md md:text-sm font-medium text-foreground'>
               Completed Modules{' '}
               <Badge variant='success'>{completedModules}</Badge>
             </div>
           </div>
           <div className='flex items-center justify-between mt-2'>
-            <p className='text-md md:text-sm font-medium text-slate-700'>
+            <p className='text-md md:text-sm font-medium text-foreground'>
               Total Quizzes: {report?.totalQuizzes ?? 0}
             </p>
 
-            <div className='text-md md:text-sm font-medium text-slate-700'>
+            <div className='text-md md:text-sm font-medium text-foreground'>
               Quiz taken{' '}
               <Badge variant='success'>{report?.attemptedQuizzes}</Badge>
             </div>
           </div>
           <div className='flex items-center justify-between mt-2'>
-            <p className='text-md md:text-sm font-medium text-slate-700'>
+            <p className='text-md md:text-sm font-medium text-foreground'>
               Mark from Quizzes
             </p>
 
-            <p className='text-md md:text-sm font-medium text-slate-700'>
+            <p className='text-md md:text-sm font-medium text-foreground'>
               {quizMark}
             </p>
           </div>
           <div className='flex items-center justify-between mt-2'>
-            <p className='text-md md:text-sm font-medium text-slate-700'>
+            <p className='text-md md:text-sm font-medium text-foreground'>
               Others
             </p>
 
-            <p className='text-md md:text-sm font-medium text-slate-700'>
+            <p className='text-md md:text-sm font-medium text-foreground'>
               {otherMarks}
             </p>
           </div>
         </div>
         <div className='flex items-center justify-between mb-4'>
-          <p className='text-md md:text-sm font-medium text-slate-700'>
+          <p className='text-md md:text-sm font-medium text-foreground'>
             Total Marks
           </p>
 
-          <p className='text-md md:text-sm font-medium text-slate-700'>
+          <p className='text-md md:text-sm font-medium text-foreground'>
             {quizMark + otherMarks}
           </p>
         </div>

@@ -74,7 +74,7 @@ export const QuizSetForm = ({ initialData, courseId, options }) => {
   };
 
   return (
-    <div className='mt-6 border bg-gray-50 rounded-md p-4'>
+    <div className='mt-6 border bg-muted rounded-md p-4'>
       <div className='font-medium flex items-center justify-between'>
         Quiz Set
         <Button variant='ghost' onClick={toggleEdit}>
@@ -92,7 +92,7 @@ export const QuizSetForm = ({ initialData, courseId, options }) => {
         <p
           className={cn(
             'text-sm mt-2',
-            !currentTitle && 'text-slate-500 italic',
+            !currentTitle && 'text-muted-foreground italic',
           )}
         >
           {currentTitle || 'No quiz set selected'}

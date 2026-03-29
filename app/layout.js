@@ -2,8 +2,9 @@ import { auth } from '@/auth';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { AuthSessionProvider } from '@/providers/session-provider';
+import { ThemeProvider } from '@/components/theme-provider';
 import { dbConnect } from '@/service/mongo';
-import { Poppins } from 'next/font/google';
+import { Ubuntu, Open_Sans } from 'next/font/google';
 import './globals.css';
 
 export const metadata = {
@@ -11,9 +12,16 @@ export const metadata = {
   description: 'Create || Learn || Share',
 };
 
-const poppins = Poppins({
+const ubuntu = Ubuntu({
   subsets: ['latin'],
-  variable: '--font-poppins',
+  variable: '--font-ubuntu',
+  display: 'swap',
+  weight: ['400', '500', '700'],
+});
+
+const openSans = Open_Sans({
+  subsets: ['latin'],
+  variable: '--font-open-sans',
   display: 'swap',
   weight: ['400', '500', '600', '700'],
 });
@@ -22,12 +30,14 @@ export default async function RootLayout({ children }) {
   await dbConnect();
   const session = await auth();
   return (
-    <html lang='en'>
-      <body className={poppins.className}>
-        <AuthSessionProvider session={session}>
-          <TooltipProvider>{children}</TooltipProvider>
-        </AuthSessionProvider>
-        <Toaster richColors position='top-center' />
+    <html lang='en' suppressHydrationWarning>
+      <body className={`${openSans.className} ${ubuntu.variable} ${openSans.variable} font-sans`}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <AuthSessionProvider session={session}>
+            <TooltipProvider>{children}</TooltipProvider>
+          </AuthSessionProvider>
+          <Toaster richColors position='top-center' />
+        </ThemeProvider>
       </body>
     </html>
   );

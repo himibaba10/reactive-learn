@@ -9,18 +9,18 @@ const QuizCard = ({
   buttonText,
 }) => {
   return (
-    <div className='max-w-[270px] bg-white border border-border rounded-md dark:bg-gray-800 dark:border-gray-700 overflow-hidden'>
+    <div className='max-w-[270px] bg-background border border-border rounded-md dark:bg-gray-800 dark:border-gray-700 overflow-hidden'>
       <div className='flex h-32 items-center justify-center bg-gradient-to-r from-sky-500 to-indigo-500 px-6 text-center'>
         <span className='text-lg font-semibold text-white'>{quizSetTitle}</span>
       </div>
       <div className='p-4'>
-        <div className='flex items-center justify-between gap-6 text-sm mb-2 font-medium text-gray-700'>
+        <div className='flex items-center justify-between gap-6 text-sm mb-2 font-medium text-foreground'>
           <span>Total Mark</span>
           <Badge className='bg-success/20 text-success hover:bg-success/20'>
             {totalMark}
           </Badge>
         </div>
-        <p className='mb-4 font-normal text-gray-500 dark:text-gray-400 text-sm'>
+        <p className='mb-4 font-normal text-muted-foreground dark:text-gray-400 text-sm'>
           {description}
         </p>
         <Button

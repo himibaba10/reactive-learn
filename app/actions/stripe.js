@@ -5,7 +5,20 @@ import { stripe } from '@/service/stripe';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
 
+import { auth } from '@/auth';
+import { Course } from '@/models/course.model';
+import { dbConnect } from '@/service/mongo';
+
 export const createCheckoutSession = async (formData) => {
+  await dbConnect();
+  const session = await auth();
+  const courseId = formData.get('courseId');
+  const course = await Course.findById(courseId).lean();
+
+  if (session?.user?.id === course?.instructor?.toString()) {
+    return { error: 'You cannot enroll in your own course.' };
+  }
+
   const origin = headers().get('origin');
 
   const checkoutSession = await stripe.checkout.sessions.create({

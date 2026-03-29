@@ -52,7 +52,7 @@ export const DescriptionForm = ({ initialData, courseId }) => {
   };
 
   return (
-    <div className='mt-6 border bg-gray-50 rounded-md p-4'>
+    <div className='mt-6 border bg-muted rounded-md p-4'>
       <div className='font-medium flex items-center justify-between'>
         Course Description
         <Button variant='ghost' onClick={toggleEdit}>
@@ -70,7 +70,7 @@ export const DescriptionForm = ({ initialData, courseId }) => {
         <p
           className={cn(
             'text-sm mt-2',
-            !initialData.description && 'text-slate-500 italic',
+            !initialData.description && 'text-muted-foreground italic',
           )}
         >
           {initialData.description || 'No description'}

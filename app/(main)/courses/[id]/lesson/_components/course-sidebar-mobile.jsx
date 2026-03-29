@@ -9,7 +9,7 @@ export const CourseSidebarMobile = () => {
       <SheetTrigger className='lg:hidden pr-4 hover:opacity-75 transition'>
         <Menu />
       </SheetTrigger>
-      <SheetContent side='left' className='p-0 bg-white w-72'>
+      <SheetContent side='left' className='p-0 bg-background w-72'>
         <CourseSidebar />
       </SheetContent>
     </Sheet>

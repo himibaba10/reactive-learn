@@ -78,9 +78,9 @@ export const ModulesForm = ({ initialData, courseId }) => {
   };
 
   return (
-    <div className='relative mt-6 border bg-slate-100 rounded-md p-4'>
+    <div className='relative mt-6 border bg-muted rounded-md p-4'>
       {isUpdating && (
-        <div className='absolute h-full w-full bg-gray-500/20 top-0 right-0 rounded-md flex items-center justify-center'>
+        <div className='absolute h-full w-full bg-muted/50 top-0 right-0 rounded-md flex items-center justify-center'>
           <Loader2 className='animate-spin h-6 w-6 text-sky-700' />
         </div>
       )}
@@ -131,7 +131,7 @@ export const ModulesForm = ({ initialData, courseId }) => {
         <div
           className={cn(
             'text-sm mt-2',
-            !modules?.length && 'text-slate-500 italic',
+            !modules?.length && 'text-muted-foreground italic',
           )}
         >
           {!modules?.length && 'No module'}
