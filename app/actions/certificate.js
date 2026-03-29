@@ -1,5 +1,6 @@
 'use server';
 
+import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { auth } from '@/auth';
 import { formatDate } from '@/lib/formatDate';
 import { getCourseDetails } from '@/queries/courses.queries';
@@ -235,8 +236,9 @@ export async function generateCertificate(courseId) {
      *-------------------*/
     const pdfBytes = await pdfDoc.save();
     const base64 = Buffer.from(pdfBytes).toString('base64');
-    return base64;
+    return actionSuccess(base64);
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    return actionError(error);
   }
 }

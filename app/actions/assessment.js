@@ -1,5 +1,6 @@
 'use server';
 
+import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { auth } from '@/auth';
 import { Assessment } from '@/models/assessment.model';
 import { QuizSet } from '@/models/quizset.model';
@@ -7,7 +8,8 @@ import { Report } from '@/models/report.model';
 import { revalidatePath } from 'next/cache';
 
 export const submitQuizSet = async ({ quizSetId, answers, courseId }) => {
-  const session = await auth();
+  try {
+    const session = await auth();
   const userId = session?.user?.id;
 
   const quizSet = await QuizSet.findById(quizSetId)
@@ -15,7 +17,7 @@ export const submitQuizSet = async ({ quizSetId, answers, courseId }) => {
     .lean();
 
   if (!quizSet) {
-    throw new Error('QuizSet not found');
+    return actionError('QuizSet not found');
   }
 
   const quizzes = quizSet.quizIds || []; // populated quizzes
@@ -49,7 +51,10 @@ export const submitQuizSet = async ({ quizSetId, answers, courseId }) => {
     { upsert: true },
   );
 
-  revalidatePath('/courses');
+    revalidatePath('/courses');
 
-  return { success: true };
+    return actionSuccess(null);
+  } catch (error) {
+    return actionError(error);
+  }
 };

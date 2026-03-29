@@ -1,6 +1,6 @@
 'use server';
 
-import { replaceMongoIdInObject } from '@/lib/convertDBData';
+import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { slugify } from '@/lib/utils';
 import { Quiz } from '@/models/quiz.model';
 import { QuizSet } from '@/models/quizset.model';
@@ -22,13 +22,10 @@ export async function createQuizSet(data) {
       slug: uniqueSlug,
     });
 
-    return {
-      success: true,
-      data: replaceMongoIdInObject(quizSet.toObject()),
-    };
+    return actionSuccess(replaceMongoIdInObject(quizSet.toObject()));
   } catch (error) {
     console.error('createQuizSet error:', error);
-    return { success: false, error: error.message };
+    return actionError(error);
   }
 }
 
@@ -36,9 +33,9 @@ export const updateQuizSet = async (quizSetId, data) => {
   try {
     await QuizSet.findByIdAndUpdate(quizSetId, data);
     revalidatePath('/dashboard');
-    return { success: true };
+    return actionSuccess(null);
   } catch (error) {
-    return { success: false, error: error.message };
+    return actionError(error);
   }
 };
 
@@ -49,10 +46,10 @@ export async function togglePublishQuizSet(quizSetId, currentStatus) {
     await QuizSet.findByIdAndUpdate(quizSetId, { status: newStatus });
 
     revalidatePath(`/dashboard/quiz-sets/${quizSetId}`);
-    return { success: true, status: newStatus };
+    return actionSuccess({ status: newStatus });
   } catch (error) {
     console.error('togglePublishQuizSet error:', error);
-    return { success: false, error: error.message };
+    return actionError(error);
   }
 }
 
@@ -63,9 +60,9 @@ export async function deleteQuizSet(quizSetId) {
     await Quiz.deleteMany({ _id: { $in: quizSet.quizIds } });
     await QuizSet.findByIdAndDelete(quizSetId);
 
-    return { success: true };
+    return actionSuccess(null);
   } catch (error) {
     console.error('deleteQuizSet error:', error);
-    return { success: false, error: error.message };
+    return actionError(error);
   }
 }

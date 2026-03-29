@@ -1,5 +1,6 @@
 'use server';
 
+import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { signIn } from '@/auth';
 import { registerUser } from '@/queries/auth.queries';
 
@@ -9,7 +10,7 @@ export async function handleRegisterUser(prevState, formData) {
     const confirmPassword = formData.get('confirm-password');
 
     if (password !== confirmPassword) {
-      return { error: 'Passwords do not match. Please try again.' };
+      return actionError('Passwords do not match. Please try again.');
     }
 
     const input = {
@@ -22,11 +23,11 @@ export async function handleRegisterUser(prevState, formData) {
     };
 
     await registerUser(input);
-    return { success: true, message: 'Account created! Redirecting...' };
+    return actionSuccess(null, 'Account created! Redirecting...');
   } catch (error) {
     console.error('An unexpected error happened in handleRegisterUser action');
     console.error(error);
-    return { error: error.message };
+    return actionError(error);
   }
 }
 
@@ -41,11 +42,11 @@ export async function handleLoginUser(prevState, formData) {
       redirect: false,
     });
 
-    return { success: true, message: 'Logged in! Please wait...' };
+    return actionSuccess(null, 'Logged in! Please wait...');
   } catch (error) {
     console.error('An unexpected error happened in handleLoginUser action');
     console.error(error);
-    return { error: error.message };
+    return actionError(error);
   }
 }
 

@@ -1,4 +1,5 @@
 'use server';
+import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { Course } from '@/models/course.model';
 import { existsSync, mkdirSync } from 'fs';
 import { unlink, writeFile } from 'fs/promises';
@@ -10,7 +11,7 @@ export async function uploadCourseImage(formData) {
     const courseId = formData.get('courseId');
 
     if (!file || typeof file === 'string') {
-      return { success: false, error: 'No file provided' };
+      return actionError('No file provided');
     }
 
     // Sanitize filename and make unique
@@ -29,16 +30,16 @@ export async function uploadCourseImage(formData) {
     await writeFile(path.join(uploadDir, filename), buffer);
     await Course.findByIdAndUpdate(courseId, { thumbnail: filename });
 
-    return { success: true, filename };
+    return actionSuccess(filename);
   } catch (error) {
     console.error('Upload error:', error);
-    return { success: false, error: error.message };
+    return actionError(error);
   }
 }
 
 export async function deleteCourseImage(filename) {
   try {
-    if (!filename) return { success: true };
+    if (!filename) return actionSuccess(null);
 
     const imagePath = path.join(
       process.cwd(),
@@ -50,9 +51,9 @@ export async function deleteCourseImage(filename) {
       await unlink(imagePath);
     }
 
-    return { success: true };
+    return actionSuccess(null);
   } catch (error) {
     console.error('Image delete error:', error);
-    return { success: false, error: error.message };
+    return actionError(error);
   }
 }

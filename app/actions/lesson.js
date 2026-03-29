@@ -1,5 +1,6 @@
 'use server';
 
+import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { slugify } from '@/lib/utils';
 import { Lesson } from '@/models/lesson.model';
 import { Module } from '@/models/module.model';
@@ -30,9 +31,9 @@ export async function createLesson(moduleId, data) {
       $push: { lessonIds: lesson._id },
     });
 
-    return { success: true, lesson: JSON.parse(JSON.stringify(lesson)) };
+    return actionSuccess(JSON.parse(JSON.stringify(lesson)));
   } catch (error) {
-    return { success: false, error: error.message };
+    return actionError(error);
   }
 }
 
@@ -43,9 +44,9 @@ export async function reorderLessons(bulkUpdateData) {
         Lesson.findByIdAndUpdate(id, { position }),
       ),
     );
-    return { success: true };
+    return actionSuccess(null);
   } catch (error) {
-    return { success: false, error: error.message };
+    return actionError(error);
   }
 }
 
@@ -59,8 +60,8 @@ export async function deleteLesson(lessonId) {
     await Lesson.findByIdAndDelete(lessonId);
 
     revalidatePath('/dashboard/courses');
-    return { success: true };
+    return actionSuccess(null);
   } catch (error) {
-    return { success: false, error: error.message };
+    return actionError(error);
   }
 }

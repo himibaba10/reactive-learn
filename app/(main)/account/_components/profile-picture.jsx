@@ -18,7 +18,9 @@ const ProfilePicture = ({ profilePicture, fullName }) => {
 
       const response = await updateProfilePicture(result.info.secure_url);
 
-      setImagePreview(response.url);
+      if (!response.success) throw new Error(response.error);
+
+      setImagePreview(response.data);
       toast.success('Profile picture updated!');
     } catch (error) {
       toast.error(error.message);

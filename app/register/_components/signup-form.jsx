@@ -1,5 +1,7 @@
 'use client';
+import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 import { SubmitButton } from '@/components/submit-button';
 import {
@@ -14,6 +16,8 @@ import { Label } from '@/components/ui/label';
 import useAccount from '@/hooks/use-account';
 
 export function SignupForm({ role }) {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { formAction } = useAccount('register');
 
   return (
@@ -59,15 +63,37 @@ export function SignupForm({ role }) {
             </div>
             <div className='grid gap-2'>
               <Label htmlFor='password'>Password</Label>
-              <Input id='password' name='password' type='password' />
+              <div className="relative">
+                <Input
+                  id='password'
+                  name='password'
+                  type={showPassword ? 'text' : 'password'}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
             </div>
             <div className='grid gap-2'>
               <Label htmlFor='confirmPassword'>Confirm Password</Label>
-              <Input
-                id='confirm-password'
-                name='confirm-password'
-                type='password'
-              />
+              <div className="relative">
+                <Input
+                  id='confirm-password'
+                  name='confirm-password'
+                  type={showConfirmPassword ? 'text' : 'password'}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
             </div>
             <input type='hidden' id='user-role' name='user-role' value={role} />
 

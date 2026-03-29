@@ -1,5 +1,6 @@
 'use server';
 
+import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { auth } from '@/auth';
 import { getLoggedInUser } from '@/lib/my-helpers';
 import { User } from '@/models/user.model';
@@ -15,7 +16,7 @@ export const handleChangePersonalDetail = async (prevState, formData) => {
   try {
     const session = await auth();
     if (formData.get('email') !== session?.user?.email)
-      throw new Error('You are not allowed to update data of another user.');
+      return actionError('You are not allowed to update data of another user.');
 
     const info = {
       firstName: formData.get('firstName'),
@@ -28,13 +29,13 @@ export const handleChangePersonalDetail = async (prevState, formData) => {
     await updatePersonalDetail(info);
     revalidatePath('/account');
 
-    return { success: true, message: 'Data updated successfully.' };
+    return actionSuccess(null, 'Data updated successfully.');
   } catch (error) {
     console.error(
       'An unexpected error happened in handleChangePersonalDetail action',
     );
     console.error(error);
-    return { error: error.message };
+    return actionError(error);
   }
 };
 
@@ -42,7 +43,7 @@ export const handleChangePassword = async (prevState, formData) => {
   try {
     const session = await auth();
     if (formData.get('email') !== session?.user?.email)
-      throw new Error('You are not allowed to update data of another user.');
+      return actionError('You are not allowed to update data of another user.');
 
     const info = {
       email: formData.get('email'),
@@ -53,13 +54,13 @@ export const handleChangePassword = async (prevState, formData) => {
 
     await updatePassword(info);
 
-    return { success: true, message: 'Password changed successfully.' };
+    return actionSuccess(null, 'Password changed successfully.');
   } catch (error) {
     console.error(
       'An unexpected error happened in handleChangePassword action',
     );
     console.error(error);
-    return { error: error.message };
+    return actionError(error);
   }
 };
 
@@ -68,7 +69,7 @@ export const handleChangeContactInfo = async (prevState, formData) => {
     const session = await auth();
     const email = formData.get('email');
     if (email !== session?.user?.email)
-      throw new Error('You are not allowed to update data of another user.');
+      return actionError('You are not allowed to update data of another user.');
 
     const info = {
       phone: formData.get('phone'),
@@ -80,13 +81,13 @@ export const handleChangeContactInfo = async (prevState, formData) => {
 
     await updateContactInfo(info, email);
 
-    return { success: true, message: 'Contact info successfully.' };
+    return actionSuccess(null, 'Contact info successfully.');
   } catch (error) {
     console.error(
       'An unexpected error happened in handleChangeContactInfo action',
     );
     console.error(error);
-    return { error: error.message };
+    return actionError(error);
   }
 };
 
@@ -106,5 +107,5 @@ export const updateProfilePicture = async (cloudinaryUrl) => {
 
   revalidatePath('/profile');
 
-  return { success: true, url: cloudinaryUrl };
+  return actionSuccess(cloudinaryUrl);
 };

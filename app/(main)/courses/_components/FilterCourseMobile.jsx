@@ -102,8 +102,8 @@ const FilterCourseMobile = () => {
             <Accordion defaultValue={['categories']} type='multiple'>
               {/* Categories filter */}
               <AccordionItem value='categories'>
-                <AccordionTrigger className='py-3 text-sm text-gray-400 hover:text-muted-foreground'>
-                  <span className='font-medium text-gray-900'>Categories</span>
+                <AccordionTrigger className='py-3 text-sm text-muted-foreground hover:text-foreground'>
+                  <span className='font-medium text-foreground'>Categories</span>
                 </AccordionTrigger>
 
                 <AccordionContent className='pt-6 animate-none'>
@@ -123,7 +123,7 @@ const FilterCourseMobile = () => {
                         />
                         <label
                           htmlFor={`category-${optionIdx}`}
-                          className='ml-3 text-sm text-gray-600 cursor-pointer'
+                          className='ml-3 text-sm text-muted-foreground cursor-pointer'
                         >
                           {option.label}
                         </label>
@@ -134,8 +134,8 @@ const FilterCourseMobile = () => {
               </AccordionItem>
               {/* Price filter */}
               <AccordionItem value='price'>
-                <AccordionTrigger className='py-3 text-sm text-gray-400 hover:text-muted-foreground'>
-                  <span className='font-medium text-gray-900'>Price</span>
+                <AccordionTrigger className='py-3 text-sm text-muted-foreground hover:text-foreground'>
+                  <span className='font-medium text-foreground'>Price</span>
                 </AccordionTrigger>
 
                 <AccordionContent className='pt-6 animate-none'>
@@ -155,7 +155,7 @@ const FilterCourseMobile = () => {
                         />
                         <label
                           htmlFor={`price-${optionIdx}`}
-                          className='ml-3 text-sm text-gray-600 cursor-pointer'
+                          className='ml-3 text-sm text-muted-foreground cursor-pointer'
                         >
                           {option.label}
                         </label>

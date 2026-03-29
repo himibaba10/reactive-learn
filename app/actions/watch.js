@@ -1,5 +1,6 @@
 'use server';
 
+import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { auth } from '@/auth';
 import { getLoggedInUser } from '@/lib/my-helpers';
 import { Lesson } from '@/models/lesson.model';
@@ -10,28 +11,34 @@ import { getModuleById } from '@/queries/module.queries';
 import { revalidatePath } from 'next/cache';
 
 export const startWatch = async ({ lessonId, moduleId, courseId }) => {
-  const session = await auth();
-  const userId = session?.user?.id;
-  await Watch.findOneAndUpdate(
-    { lesson: lessonId, user: userId, course: courseId, module: moduleId },
-    {
-      $setOnInsert: {
-        lesson: lessonId,
-        user: userId,
-        module: moduleId,
-        course: courseId,
-        state: 'started',
+  try {
+    const session = await auth();
+    const userId = session?.user?.id;
+    await Watch.findOneAndUpdate(
+      { lesson: lessonId, user: userId, course: courseId, module: moduleId },
+      {
+        $setOnInsert: {
+          lesson: lessonId,
+          user: userId,
+          module: moduleId,
+          course: courseId,
+          state: 'started',
+        },
       },
-    },
-    { upsert: true, returnDocument: 'after' },
-  );
+      { upsert: true, returnDocument: 'after' },
+    );
+    return actionSuccess(null);
+  } catch (error) {
+    return actionError(error);
+  }
 };
 
 export const completeWatch = async ({ lessonId, courseId, moduleId }) => {
-  const loggedInUser = await getLoggedInUser();
+  try {
+    const loggedInUser = await getLoggedInUser();
 
-  // Step 1: mark watch as completed
-  await Watch.findOneAndUpdate(
+    // Step 1: mark watch as completed
+    await Watch.findOneAndUpdate(
     {
       lesson: lessonId,
       user: loggedInUser.id,
@@ -93,5 +100,9 @@ export const completeWatch = async ({ lessonId, courseId, moduleId }) => {
     }
   }
 
-  revalidatePath('/courses');
+    revalidatePath('/courses');
+    return actionSuccess(null);
+  } catch (error) {
+    return actionError(error);
+  }
 };

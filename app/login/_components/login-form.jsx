@@ -1,5 +1,7 @@
 'use client';
+import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 import { SubmitButton } from '@/components/submit-button';
 import {
@@ -14,6 +16,7 @@ import { Label } from '@/components/ui/label';
 import useAccount from '@/hooks/use-account';
 
 export function LoginForm() {
+  const [showPassword, setShowPassword] = useState(false);
   const { formAction } = useAccount('login');
   return (
     <Card className='mx-auto max-w-sm w-full'>
@@ -39,11 +42,22 @@ export function LoginForm() {
             <div className='grid gap-2'>
               <div className='flex items-center'>
                 <Label htmlFor='password'>Password</Label>
-                {/* <Link href="#" className="ml-auto inline-block text-sm underline">
-                Forgot your password?
-              </Link> */}
               </div>
-              <Input id='password' name='password' type='password' required />
+              <div className="relative">
+                <Input
+                  id='password'
+                  name='password'
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
             </div>
             <SubmitButton text='Login' loadingText='Logging in...' />
           </div>

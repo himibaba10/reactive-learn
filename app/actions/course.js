@@ -1,5 +1,6 @@
 'use server';
 
+import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { replaceMongoIdInObject } from '@/lib/convertDBData';
 import { Course } from '@/models/course.model';
 import { Lesson } from '@/models/lesson.model';
@@ -8,21 +9,25 @@ import { revalidatePath } from 'next/cache';
 import { deleteCourseImage } from './course-image';
 
 export const togglePublishCourse = async (courseId) => {
-  const course = await Course.findById(courseId).select('active').lean();
+  try {
+    const course = await Course.findById(courseId).select('active').lean();
 
-  const updatedCourse = await Course.findByIdAndUpdate(
-    courseId,
-    {
-      active: !course?.active,
-    },
-    {
-      returnDocument: 'after',
-    },
-  ).lean();
+    const updatedCourse = await Course.findByIdAndUpdate(
+      courseId,
+      {
+        active: !course?.active,
+      },
+      {
+        returnDocument: 'after',
+      },
+    ).lean();
 
-  revalidatePath('/dashboard/courses');
+    revalidatePath('/dashboard/courses');
 
-  return replaceMongoIdInObject(updatedCourse);
+    return actionSuccess(replaceMongoIdInObject(updatedCourse));
+  } catch (error) {
+    return actionError(error);
+  }
 };
 
 export async function deleteCourse(courseId) {
@@ -47,9 +52,9 @@ export async function deleteCourse(courseId) {
     await Course.findByIdAndDelete(courseId);
 
     revalidatePath('/dashboard/courses');
-    return { success: true };
+    return actionSuccess(null);
   } catch (error) {
-    return { success: false, error: error.message };
+    return actionError(error);
   }
 }
 
@@ -58,9 +63,9 @@ export async function updateCourseQuizSet(courseId, quizSetId) {
     await Course.findByIdAndUpdate(courseId, { quizSet: quizSetId });
 
     revalidatePath(`/dashboard/courses/${courseId}`);
-    return { success: true };
+    return actionSuccess(null);
   } catch (error) {
     console.error('updateCourseQuizSet error:', error);
-    return { success: false, error: error.message };
+    return actionError(error);
   }
 }

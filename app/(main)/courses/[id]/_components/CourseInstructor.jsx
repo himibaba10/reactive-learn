@@ -18,22 +18,22 @@ const CourseInstructor = async ({ instructor }) => {
         <div className='flex-1'>
           <div className='max-w-[300px]'>
             <h4 className='text-[34px] font-bold leading-[51px]'>{fullName}</h4>
-            <div className='text-gray-600 font-medium mb-6'>{instructor?.designation}</div>
+            <div className='text-muted-foreground font-medium mb-6'>{instructor?.designation}</div>
             <ul className='list space-y-4'>
               <li className='flex items-center space-x-3'>
-                <Presentation className='text-gray-600' />
+                <Presentation className='text-muted-foreground' />
                 <div>{instructorStats?.courses?.length ?? 0} Courses</div>
               </li>
               <li className='flex space-x-3'>
-                <UsersRound className='text-gray-600' />
+                <UsersRound className='text-muted-foreground' />
                 <div>{instructorStats?.students} Student Learned</div>
               </li>
               <li className='flex space-x-3'>
-                <MessageSquare className='text-gray-600' />
+                <MessageSquare className='text-muted-foreground' />
                 <div>{instructorStats?.reviewsCount} Reviews</div>
               </li>
               <li className='flex space-x-3'>
-                <Star className='text-gray-600' />
+                <Star className='text-muted-foreground' />
                 <div>{instructorStats?.averageReviews} Average Rating</div>
               </li>
             </ul>
@@ -43,7 +43,7 @@ const CourseInstructor = async ({ instructor }) => {
           </div>
         </div>
       </div>
-      <p className='text-gray-600'>{instructor?.bio}</p>
+      <p className='text-muted-foreground'>{instructor?.bio}</p>
     </div>
   );
 };

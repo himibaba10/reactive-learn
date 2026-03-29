@@ -1,12 +1,6 @@
 import { SectionTitle } from '@/components/section-title';
 import StarRating from '@/components/star-rating';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Image from 'next/image';
 
 const Testimonials = ({ testimonials }) => {
@@ -24,27 +18,14 @@ const Testimonials = ({ testimonials }) => {
           <CarouselNext />
           <CarouselContent className='py-4'>
             {testimonials.map((testimonial) => (
-              <CarouselItem
-                key={testimonial._id}
-                className='md:basis-1/2 lg:basis-1/3'
-              >
+              <CarouselItem key={testimonial._id} className='md:basis-1/2 lg:basis-1/3'>
                 <div className='sm:break-inside-avoid h-full'>
                   <blockquote className='rounded-lg bg-muted p-6  sm:p-8 shadow-sm h-full'>
                     <div className='flex items-center gap-4'>
-                      <Image
-                        alt=''
-                        src={
-                          testimonial?.user?.profilePicture ??
-                          'https://i.pravatar.cc/56'
-                        }
-                        width='56'
-                        height='56'
-                        className='size-14 rounded-full object-cover'
-                      />
+                      <Image alt='' src={testimonial?.user?.profilePicture ?? 'https://i.pravatar.cc/56'} width='56' height='56' className='size-14 rounded-full object-cover' />
                       <div>
-                        <p className='mt-0.5 text-lg font-medium text-gray-900'>
-                          {testimonial?.user?.firstName}{' '}
-                          {testimonial?.user?.lastName}
+                        <p className='mt-0.5 text-lg font-medium text-foreground'>
+                          {testimonial?.user?.firstName} {testimonial?.user?.lastName}
                         </p>
                         <div className='flex justify-start gap-0.5 text-yellow-600'>
                           <StarRating rating={testimonial?.rating} />

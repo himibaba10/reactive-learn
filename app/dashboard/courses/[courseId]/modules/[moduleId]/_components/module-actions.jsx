@@ -9,15 +9,28 @@ const ModuleActions = ({ mod }) => {
   const router = useRouter();
 
   const handleModulePublish = async () => {
-    const updatedModule = await togglePublishModule(mod?._id);
-    toast.success(
-      `Module is ${updatedModule?.status === 'active' ? 'published' : 'unpublished'}.`,
-    );
+    try {
+      const response = await togglePublishModule(mod?._id);
+      if (!response.success) {
+        toast.error(response.error);
+        return;
+      }
+      const updatedModule = response.data;
+      toast.success(
+        `Module is ${updatedModule?.status === 'active' ? 'published' : 'unpublished'}.`,
+      );
+    } catch (error) {
+      toast.error('Something went wrong');
+    }
   };
 
   const handleModuleDelete = async () => {
     try {
-      await deleteModule(mod?._id);
+      const response = await deleteModule(mod?._id);
+      if (!response.success) {
+        toast.error(response.error);
+        return;
+      }
       toast.success('Module deleted successfully');
 
       router.push(`/dashboard/courses/${mod?.course}`);

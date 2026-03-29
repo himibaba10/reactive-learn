@@ -8,15 +8,28 @@ const CourseDashboardActions = ({ course }) => {
   const router = useRouter();
 
   const handleCoursePublish = async () => {
-    const updatedCourse = await togglePublishCourse(course?._id);
-    toast.success(
-      `Course is ${updatedCourse?.active ? 'published' : 'unpublished'}.`,
-    );
+    try {
+      const response = await togglePublishCourse(course?._id);
+      if (!response.success) {
+        toast.error(response.error);
+        return;
+      }
+      const updatedCourse = response.data;
+      toast.success(
+        `Course is ${updatedCourse?.active ? 'published' : 'unpublished'}.`,
+      );
+    } catch (error) {
+      toast.error('Something went wrong');
+    }
   };
 
   const handleCourseDelete = async () => {
     try {
-      await deleteCourse(course?._id);
+      const response = await deleteCourse(course?._id);
+      if (!response.success) {
+        toast.error(response.error);
+        return;
+      }
       toast.success('Course deleted successfully');
 
       router.push(`/dashboard`);

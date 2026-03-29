@@ -3,20 +3,16 @@ import { SiteFooter } from '@/components/site-footer';
 
 const navLinks = [
   {
-    title: 'Features',
-    href: '/#features',
+    title: 'Courses',
+    href: '/courses',
   },
   {
-    title: 'Pricing',
-    href: '/pricing',
+    title: 'My Learning',
+    href: '/account/enrolled-courses',
   },
   {
-    title: 'Blog',
-    href: '/blog',
-  },
-  {
-    title: 'Documentation',
-    href: '/docs',
+    title: 'My Profile',
+    href: '/account',
   },
 ];
 

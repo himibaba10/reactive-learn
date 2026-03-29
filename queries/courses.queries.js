@@ -160,7 +160,12 @@ export const getCourseDetails = async (id) => {
 export const getCoursesByInstructor = async (instructorId) => {
   const coursesByInstructor = await Course.find({
     instructor: instructorId,
-  }).lean();
+  })
+    .populate({
+      module: Category,
+      path: 'category',
+    })
+    .lean();
 
   return replaceMongoIdInArray(coursesByInstructor);
 };

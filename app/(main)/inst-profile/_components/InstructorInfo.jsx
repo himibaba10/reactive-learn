@@ -30,30 +30,30 @@ const InstructorInfo = ({ instructor }) => {
 
           <div>
             <h4 className='text-xl lg:text-2xl text-center'>{fullName}</h4>
-            <div className='text-gray-600 font-medium mb-6 text-sm text-center'>
+            <div className='text-muted-foreground font-medium mb-6 text-sm text-center'>
               {designation}
             </div>
-            <ul className=' items-center gap-3 flex-wrap text-sm text-gray-600 font-medium grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 md:grid-cols-4'>
+            <ul className=' items-center gap-3 flex-wrap text-sm text-muted-foreground font-medium grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 md:grid-cols-4'>
               <li className='flex items-center space-x-3'>
-                <Presentation className='text-gray-600 w-4' />
+                <Presentation className='text-muted-foreground w-4' />
                 <div>{courses?.length ?? 0} Courses</div>
               </li>
               <li className='flex items-center space-x-3'>
-                <UsersRound className='text-gray-600 w-4' />
+                <UsersRound className='text-muted-foreground w-4' />
                 <div>{students} Students</div>
               </li>
               <li className='flex items-center space-x-3'>
-                <MessageSquare className='text-gray-600 w-4' />
+                <MessageSquare className='text-muted-foreground w-4' />
                 <div>{reviewsCount} Reviews</div>
               </li>
               <li className='flex items-center space-x-3'>
-                <Star className='text-gray-600 w-4' />
+                <Star className='text-muted-foreground w-4' />
                 <div>{averageReviews} Average Rating</div>
               </li>
             </ul>
           </div>
         </div>
-        <p className='text-gray-600 text-xs leading-[1.8]'>{bio}</p>
+        <p className='text-muted-foreground text-xs leading-[1.8]'>{bio}</p>
       </div>
     </div>
   );

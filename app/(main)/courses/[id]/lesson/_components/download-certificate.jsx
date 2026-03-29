@@ -12,9 +12,13 @@ export const DownloadCertificate = ({ courseId }) => {
   async function handleCertificateDownload() {
     try {
       setIsCertificateDownloading(true);
-      const base64 = await generateCertificate(courseId);
+      const response = await generateCertificate(courseId);
 
-      const byteCharacters = atob(base64);
+      if (!response.success) {
+        throw new Error(response.error || 'Failed to generate certificate');
+      }
+
+      const byteCharacters = atob(response.data);
       const byteNumbers = Array.from(byteCharacters, (char) =>
         char.charCodeAt(0),
       );

@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Checkbox } from '@/components/ui/checkbox';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -65,27 +60,16 @@ const FilterCourse = ({ categories = [] }) => {
       <Accordion defaultValue={['categories']} type='multiple'>
         {/* Categories filter */}
         <AccordionItem value='categories'>
-          <AccordionTrigger className='py-3 text-sm text-gray-400 hover:text-muted-foreground'>
-            <span className='font-medium text-gray-900'>
-              Categories ({categories?.length})
-            </span>
+          <AccordionTrigger className='py-3 text-sm text-muted-foreground hover:text-foreground'>
+            <span className='font-medium text-primary'>Categories ({categories?.length})</span>
           </AccordionTrigger>
 
           <AccordionContent className='pt-6 animate-none'>
             <ul className='space-y-4'>
               {categories.map((category) => (
                 <li key={category._id} className='flex items-center'>
-                  <Checkbox
-                    id={`category-${category._id}`}
-                    onCheckedChange={() =>
-                      applyArrayFilter('categories', category._id)
-                    }
-                    checked={isChecked('categories', category._id)}
-                  />
-                  <label
-                    htmlFor={`category-${category._id}`}
-                    className='ml-3 text-sm text-gray-600 cursor-pointer flex-1 truncate'
-                  >
+                  <Checkbox id={`category-${category._id}`} onCheckedChange={() => applyArrayFilter('categories', category._id)} checked={isChecked('categories', category._id)} />
+                  <label htmlFor={`category-${category._id}`} className='ml-3 text-sm text-muted-foreground cursor-pointer flex-1 truncate'>
                     {category.title}
                   </label>
                 </li>

@@ -1,5 +1,6 @@
 'use server';
 
+import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { slugify } from '@/lib/utils';
 import { Quiz } from '@/models/quiz.model';
 import { QuizSet } from '@/models/quizset.model';
@@ -9,9 +10,9 @@ export async function updateQuiz(quizId, data) {
   try {
     await Quiz.findByIdAndUpdate(quizId, data);
     revalidatePath('/dashboard');
-    return { success: true };
+    return actionSuccess(null);
   } catch (error) {
-    return { success: false, error: error.message };
+    return actionError(error);
   }
 }
 
@@ -35,10 +36,10 @@ export async function createQuiz(quizSetId, quizData) {
       $push: { quizIds: quiz._id },
     });
 
-    return { success: true };
+    return actionSuccess(null);
   } catch (error) {
     console.error('createQuiz error:', error);
-    return { success: false, error: error.message };
+    return actionError(error);
   }
 }
 
@@ -50,9 +51,9 @@ export async function deleteQuiz(quizSetId, quizId) {
       $pull: { quizIds: quizId },
     });
 
-    return { success: true };
+    return actionSuccess(null);
   } catch (error) {
     console.error('deleteQuiz error:', error);
-    return { success: false, error: error.message };
+    return actionError(error);
   }
 }

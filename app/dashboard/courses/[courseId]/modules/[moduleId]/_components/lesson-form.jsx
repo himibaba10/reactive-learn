@@ -48,7 +48,7 @@ export const LessonForm = ({ moduleId, initialLessons = [] }) => {
       const result = await createLesson(moduleId, { title: values.title });
 
       if (result.success) {
-        setLessons((prev) => [...prev, result.lesson]);
+        setLessons((prev) => [...prev, result.data]);
         toast.success('Lesson created');
         form.reset();
         toggleCreating();

@@ -22,13 +22,13 @@ const EnrollButton = ({ asLink, courseId, courseTitle, coursePrice }) => {
     try {
       const sessionResponse = await createCheckoutSession(formData);
       
-      if (sessionResponse?.error) {
+      if (!sessionResponse.success) {
         toast.error(sessionResponse.error);
         return;
       }
       
-      if (sessionResponse?.url) {
-        window.location.assign(sessionResponse.url);
+      if (sessionResponse?.data?.url) {
+        window.location.assign(sessionResponse.data.url);
       }
     } catch (err) {
       toast.error(err.message || 'An error occurred during checkout');

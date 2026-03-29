@@ -1,5 +1,6 @@
 'use server';
 
+import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { formatAmountForStripe } from '@/lib/stripe-helpers';
 import { stripe } from '@/service/stripe';
 import { headers } from 'next/headers';
@@ -10,13 +11,14 @@ import { Course } from '@/models/course.model';
 import { dbConnect } from '@/service/mongo';
 
 export const createCheckoutSession = async (formData) => {
-  await dbConnect();
-  const session = await auth();
+  try {
+    await dbConnect();
+    const session = await auth();
   const courseId = formData.get('courseId');
   const course = await Course.findById(courseId).lean();
 
   if (session?.user?.id === course?.instructor?.toString()) {
-    return { error: 'You cannot enroll in your own course.' };
+    return actionError('You cannot enroll in your own course.');
   }
 
   const origin = headers().get('origin');
@@ -42,20 +44,27 @@ export const createCheckoutSession = async (formData) => {
     customer_email: formData.get('email'),
   });
 
-  return {
-    client_secret: checkoutSession.client_secret,
-    url: checkoutSession.url,
-  };
+    return actionSuccess({
+      client_secret: checkoutSession.client_secret,
+      url: checkoutSession.url,
+    });
+  } catch (error) {
+    return actionError(error);
+  }
 };
 
 export const createPaymentIntent = async (data) => {
-  const paymentIntent = await Stripe.paymentIntent.create({
+  try {
+    const paymentIntent = await Stripe.paymentIntent.create({
     amount: formatAmountForStripe(formData.get('coursePrice')),
     automatic_payment_methods: { enabled: true },
     currency: 'BDT',
   });
 
-  return {
-    client_secret: paymentIntent.client_secret,
-  };
+    return actionSuccess({
+      client_secret: paymentIntent.client_secret,
+    });
+  } catch (error) {
+    return actionError(error);
+  }
 };

@@ -52,7 +52,7 @@ const Quiz = ({ quiz: initialQuiz, quizSetId }) => {
           <h2 className='mb-3'>{quiz.question}</h2>
           <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
             {quiz.options.map((option) => (
-              <div className={cn('py-1.5 rounded-sm text-sm flex items-center gap-1 text-gray-600')} key={option.text}>
+              <div className={cn('py-1.5 rounded-sm text-sm flex items-center gap-1 text-muted-foreground')} key={option.text}>
                 {option.is_correct ? <CircleCheck className='size-4 text-emerald-500' /> : <Circle className='size-4' />}
                 <p className='text-muted-foreground'>{option.text}</p>
               </div>

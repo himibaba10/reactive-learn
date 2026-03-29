@@ -44,11 +44,15 @@ export const ReviewModal = ({ open, setOpen, courseId }) => {
 
   const onSubmit = async (values) => {
     try {
-      await createTestimonial({
+      const response = await createTestimonial({
         courseId,
         rating: values.rating,
         content: values.review,
       });
+      if (!response.success) {
+        toast.error(response.error);
+        return;
+      }
       toast.success('Review added!');
       form.reset();
       setOpen(false);

@@ -57,8 +57,8 @@
     --popover: 224 71.4% 4.1%;
     --popover-foreground: 210 20% 98%;
 
-    --primary: 210 100% 20%;
-    --primary-foreground: 210 20% 98%;
+    --primary: 210 100% 60%;
+    --primary-foreground: 224 71.4% 90%;
 
     --secondary: 140 52% 55%;
     --secondary-foreground: 220.9 39.3% 11%;
@@ -90,7 +90,141 @@
   body {
     @apply bg-background text-foreground font-sans;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-heading;
+  }
+}
+
+/* ====== Ken Burns (Hero Zoom) ====== */
+@keyframes hero-ken-burns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.12); }
+}
+
+.hero-bg-zoom {
+  animation: hero-ken-burns 6s ease-out forwards;
+}
+
+
+.theme-toggle-track {
+  position: relative;
+  width: 3.5rem;
+  height: 36px;
+  border-radius: 9999px;
+  transition: all 0.5s ease-in-out !important;
+  box-shadow:
+    0 0 10px rgba(99, 102, 241, 0.4),
+    inset 0 0 10px rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, #f8c869, #ffc53f, #e4a000);
+  cursor: pointer;
+  z-index: 1;
+  overflow: hidden;
+  transform: translateZ(0);
+}
+
+/* Gradient Crossfade for the Track */
+.theme-toggle-track::before {
+  content: '';
+  position: absolute;
+  inset: 0px;
+  transform: scale(1.05);
+  border-radius: inherit;
+  background: linear-gradient(135deg, #554c64, #24206e, #000000);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.5s ease-in-out !important;
+}
+
+.theme-toggle-track.is-dark {
+  background: linear-gradient(135deg, #554c64, #24206e, #000000);
+}
+
+.theme-toggle-track.is-dark::before {
+  opacity: 1;
+}
+
+.theme-toggle-btn {
+  position: absolute;
+  top: 0.25rem;
+  left: 0.25rem;
+  height: 1.75rem;
+  width: 1.75rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  background: radial-gradient(circle, #ffffff 0%, #d1d5db 100%);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) !important;
+  z-index: 2;
+  overflow: hidden;
+  transform: translateZ(0);
+}
+
+/* Gradient Crossfade for the Button */
+.theme-toggle-btn::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  transform: scale(1.05);
+  border-radius: inherit;
+  background: radial-gradient(circle, #0ea5e9 0%, #3b82f6 60%, #7c3aed 100%);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.4s ease !important;
+}
+
+.theme-toggle-track.is-dark .theme-toggle-btn::before {
+  opacity: 1;
+}
+
+.theme-toggle-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease !important;
+  z-index: 0; /* Keeps it behind the icon but above the background */
+}
+
+.theme-toggle-track.is-dark {
+  /* Removed the gradient override from here, it's handled by ::before now */
+  box-shadow:
+    0 0 25px rgba(124, 58, 237, 0.7),
+    inset 0 0 10px rgba(255, 255, 255, 0.15);
+}
+
+.theme-toggle-track.is-dark .theme-toggle-btn {
+  transform: translateX(1.2rem);
+  /* Removed the gradient override from here, it's handled by ::before now */
+  box-shadow:
+    0 0 25px rgba(59, 130, 246, 0.8),
+    0 0 50px rgba(124, 58, 237, 0.6);
+  animation: theme-pulse 2s infinite;
+}
+
+.theme-toggle-track.is-dark .theme-toggle-btn::after {
+  opacity: 1;
+}
+
+@keyframes theme-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(14, 165, 233, 0.8);
   }
 }

@@ -5,6 +5,7 @@ import {
   PUBLIC_ROUTES,
   REGISTER,
   ROOT,
+  STUDENT_ROUTES,
   TEACHER_ROUTES,
 } from './lib/routes';
 
@@ -24,6 +25,13 @@ export default auth((req) => {
     pathname.startsWith(route),
   );
 
+  const isStudentRoute = STUDENT_ROUTES.some((route) =>
+    pathname.startsWith(route),
+  );
+
+  // Teacher-only: in TEACHER_ROUTES but NOT in STUDENT_ROUTES
+  const isTeacherOnlyRoute = isTeachersRoute && !isStudentRoute;
+
   if (!isAuthenticated && !isPublicRoute) {
     return Response.redirect(new URL(LOGIN, nextUrl));
   }
@@ -35,7 +43,8 @@ export default auth((req) => {
     return Response.redirect(new URL('/', nextUrl));
   }
 
-  if (role === 'student' && isTeachersRoute) {
+  // Students cannot access teacher-only routes
+  if (role === 'student' && isTeacherOnlyRoute) {
     return Response.redirect(new URL('/', nextUrl));
   }
 

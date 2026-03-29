@@ -1,4 +1,6 @@
 'use server';
+
+import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { replaceMongoIdInObject } from '@/lib/convertDBData';
 import { Course } from '@/models/course.model';
 import { Lesson } from '@/models/lesson.model';
@@ -14,37 +16,41 @@ export async function reorderModules(bulkUpdateData) {
       ),
     );
 
-    return { success: true };
+    return actionSuccess(null);
   } catch (error) {
-    return { success: false, error: error.message };
+    return actionError(error);
   }
 }
 
 export const createModule = async (courseId, data) => {
   try {
     const result = await createModuleToDB(courseId, data);
-    return { success: true, data: result };
+    return actionSuccess(result);
   } catch (error) {
-    return { success: false, error: error.message };
+    return actionError(error);
   }
 };
 
 export const togglePublishModule = async (moduleId) => {
-  const mod = await Module.findById(moduleId).select('status').lean();
+  try {
+    const mod = await Module.findById(moduleId).select('status').lean();
 
-  const updatedModule = await Module.findByIdAndUpdate(
-    moduleId,
-    {
-      status: mod.status === 'active' ? 'inactive' : 'active',
-    },
-    {
-      returnDocument: 'after',
-    },
-  ).lean();
+    const updatedModule = await Module.findByIdAndUpdate(
+      moduleId,
+      {
+        status: mod.status === 'active' ? 'inactive' : 'active',
+      },
+      {
+        returnDocument: 'after',
+      },
+    ).lean();
 
-  revalidatePath('/dashboard/courses');
+    revalidatePath('/dashboard/courses');
 
-  return replaceMongoIdInObject(updatedModule);
+    return actionSuccess(replaceMongoIdInObject(updatedModule));
+  } catch (error) {
+    return actionError(error);
+  }
 };
 
 export async function deleteModule(moduleId) {
@@ -63,8 +69,8 @@ export async function deleteModule(moduleId) {
     await Module.findByIdAndDelete(moduleId);
 
     revalidatePath('/dashboard/courses');
-    return { success: true };
+    return actionSuccess(null);
   } catch (error) {
-    return { success: false, error: error.message };
+    return actionError(error);
   }
 }

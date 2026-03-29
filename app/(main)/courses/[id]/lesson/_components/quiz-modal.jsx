@@ -61,11 +61,16 @@ export default function QuizModal({
 
     setIsSubmitting(true);
     try {
-      await submitQuizSet({
+      const response = await submitQuizSet({
         quizSetId: quizSet._id,
         answers: userAnswers,
         courseId,
       });
+
+      if (!response.success) {
+        toast.error(response.error);
+        return;
+      }
 
       toast.success('Quiz submitted successfully!');
       setOpen(false);

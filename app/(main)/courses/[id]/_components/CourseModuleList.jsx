@@ -17,7 +17,7 @@ const CourseModuleList = ({ module }) => {
       <AccordionTrigger>{module?.title}</AccordionTrigger>
       <AccordionContent>
         {/* header */}
-        <div className='flex gap-x-5 items-center flex-wrap mt-4 mb-6 text-gray-600 text-sm'>
+        <div className='flex gap-x-5 items-center flex-wrap mt-4 mb-6 text-muted-foreground text-sm'>
           <span className='flex items-center gap-1.5'>
             <Video className='w-4 h-4' />
             {((moduleDuration || 0) / 3600).toPrecision(2)} Hours

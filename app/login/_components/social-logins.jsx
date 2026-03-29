@@ -5,7 +5,7 @@ import Image from 'next/image';
 const SocialLogins = () => {
   return (
     <>
-      <div className='text-center text-md mt-3 text-gray-500'>
+      <div className='text-center text-md mt-3 text-muted-foreground'>
         or Signup with
       </div>
       <form action={handleSocialLogin}>
