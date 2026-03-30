@@ -18,7 +18,7 @@ import useAccount from '@/hooks/use-account';
 export function SignupForm({ role }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { formAction } = useAccount('register');
+  const { formAction, formRef } = useAccount('register');
 
   return (
     <Card className='mx-auto max-w-sm'>
@@ -29,7 +29,8 @@ export function SignupForm({ role }) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={formAction}>
+        <form action={formAction} ref={formRef}>
+
           <div className='grid gap-4'>
             <div className='grid grid-cols-2 gap-4'>
               <div className='grid gap-2'>

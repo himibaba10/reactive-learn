@@ -1,8 +1,10 @@
 'use server';
 
-import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { signIn } from '@/auth';
+import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { registerUser } from '@/queries/auth.queries';
+import { AuthError } from 'next-auth';
+import { isRedirectError } from 'next/dist/client/components/redirect';
 
 export async function handleRegisterUser(prevState, formData) {
   try {
@@ -42,11 +44,19 @@ export async function handleLoginUser(prevState, formData) {
       redirect: false,
     });
 
-    return actionSuccess(null, 'Logged in! Please wait...');
+    return actionSuccess(null, 'Logged in! Redirecting...');
   } catch (error) {
-    console.error('An unexpected error happened in handleLoginUser action');
-    console.error(error);
-    return actionError(error);
+    if (isRedirectError(error)) {
+      return actionSuccess(null, 'Logged in! Redirecting...');
+    }
+
+    if (error instanceof AuthError) {
+      console.error('AuthError caught in login action:', error.type);
+      return actionError('Invalid credentials or authentication error.');
+    }
+
+    console.error('Unhandled error in handleLoginUser action:', error);
+    return actionError(error.message || 'An unexpected error occurred');
   }
 }
 
@@ -62,4 +72,3 @@ export async function handleSocialLogin(formData) {
     return actionError(error);
   }
 }
-

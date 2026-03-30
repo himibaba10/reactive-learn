@@ -10,7 +10,10 @@ const NavbarDropdown = ({ loggedInUser }) => {
         <div className='cursor-pointer'>
           <Avatar>
             <AvatarImage src={loggedInUser?.profilePicture} alt={`${loggedInUser?.firstName} ${loggedInUser?.lastName}`} />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback>
+              {loggedInUser?.firstName?.charAt(0)}
+              {loggedInUser?.lastName?.charAt(0)}
+            </AvatarFallback>
           </Avatar>
         </div>
       </DropdownMenuTrigger>
