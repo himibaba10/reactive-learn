@@ -5,9 +5,11 @@ import { AuthSessionProvider } from '@/providers/session-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 import { dbConnect } from '@/service/mongo';
 import { Ubuntu, Open_Sans } from 'next/font/google';
+import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
 
 export const metadata = {
+
   title: 'Reactive Learn | Create, Learn, Share',
   description: 'Create || Learn || Share',
 };
@@ -32,6 +34,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang='en' suppressHydrationWarning>
       <body className={`${openSans.className} ${ubuntu.variable} ${openSans.variable} font-sans`}>
+        <NextTopLoader color='#10b981' showSpinner={false} height={3} />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <AuthSessionProvider session={session}>
             <TooltipProvider>{children}</TooltipProvider>
@@ -39,6 +42,7 @@ export default async function RootLayout({ children }) {
           <Toaster richColors position='top-center' />
         </ThemeProvider>
       </body>
+
     </html>
   );
 }
