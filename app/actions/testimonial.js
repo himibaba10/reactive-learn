@@ -3,10 +3,12 @@
 import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { auth } from '@/auth';
 import { Testimonial } from '@/models/testimonial.model';
+import { dbConnect } from '@/service/mongo';
 import { revalidatePath } from 'next/cache';
 
 export const createTestimonial = async ({ courseId, rating, content }) => {
   try {
+    await dbConnect();
     const session = await auth();
     const userId = session?.user?.id;
 

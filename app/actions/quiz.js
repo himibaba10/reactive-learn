@@ -4,10 +4,12 @@ import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { slugify } from '@/lib/utils';
 import { Quiz } from '@/models/quiz.model';
 import { QuizSet } from '@/models/quizset.model';
+import { dbConnect } from '@/service/mongo';
 import { revalidatePath } from 'next/cache';
 
 export async function updateQuiz(quizId, data) {
   try {
+    await dbConnect();
     await Quiz.findByIdAndUpdate(quizId, data);
     revalidatePath('/dashboard');
     return actionSuccess(null);
@@ -18,6 +20,7 @@ export async function updateQuiz(quizId, data) {
 
 export async function createQuiz(quizSetId, quizData) {
   try {
+    await dbConnect();
     let slug = slugify(quizData.question);
     let uniqueSlug = slug;
     let count = 1;
@@ -45,6 +48,7 @@ export async function createQuiz(quizSetId, quizData) {
 
 export async function deleteQuiz(quizSetId, quizId) {
   try {
+    await dbConnect();
     await Quiz.findByIdAndDelete(quizId);
 
     await QuizSet.findByIdAndUpdate(quizSetId, {

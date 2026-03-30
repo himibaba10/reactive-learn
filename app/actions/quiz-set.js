@@ -1,13 +1,16 @@
 'use server';
 
 import { actionError, actionSuccess } from '@/lib/actionResponse';
+import { replaceMongoIdInObject } from '@/lib/convertDBData';
 import { slugify } from '@/lib/utils';
 import { Quiz } from '@/models/quiz.model';
 import { QuizSet } from '@/models/quizset.model';
+import { dbConnect } from '@/service/mongo';
 import { revalidatePath } from 'next/cache';
 
 export async function createQuizSet(data) {
   try {
+    await dbConnect();
     let slug = slugify(data.title);
     let uniqueSlug = slug;
     let count = 1;
@@ -31,6 +34,7 @@ export async function createQuizSet(data) {
 
 export const updateQuizSet = async (quizSetId, data) => {
   try {
+    await dbConnect();
     await QuizSet.findByIdAndUpdate(quizSetId, data);
     revalidatePath('/dashboard');
     return actionSuccess(null);
@@ -41,6 +45,7 @@ export const updateQuizSet = async (quizSetId, data) => {
 
 export async function togglePublishQuizSet(quizSetId, currentStatus) {
   try {
+    await dbConnect();
     const newStatus = currentStatus === 'active' ? 'draft' : 'active';
 
     await QuizSet.findByIdAndUpdate(quizSetId, { status: newStatus });
@@ -55,6 +60,7 @@ export async function togglePublishQuizSet(quizSetId, currentStatus) {
 
 export async function deleteQuizSet(quizSetId) {
   try {
+    await dbConnect();
     const quizSet = await QuizSet.findById(quizSetId);
 
     await Quiz.deleteMany({ _id: { $in: quizSet.quizIds } });

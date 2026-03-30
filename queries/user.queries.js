@@ -1,27 +1,31 @@
 'use server';
 
 import { compare, hash } from 'bcryptjs';
-
-const { replaceMongoIdInObject } = require('@/lib/convertDBData');
-const { User } = require('@/models/user.model');
+import { replaceMongoIdInObject } from '@/lib/convertDBData';
+import { User } from '@/models/user.model';
+import { dbConnect } from '@/service/mongo';
 
 export const getUserByEmail = async (email) => {
+  await dbConnect();
   const user = await User.findOne({ email }).lean();
 
   return replaceMongoIdInObject(user);
 };
 
 export const getUserById = async (id) => {
+  await dbConnect();
   const user = await User.findById(id).lean();
 
   return replaceMongoIdInObject(user);
 };
 
 export const updatePersonalDetail = async (data) => {
+  await dbConnect();
   await User.findOneAndUpdate({ email: data?.email }, data);
 };
 
 export const updatePassword = async (data) => {
+  await dbConnect();
   const { email, password, newPassword, confirmNewPassword } = data;
 
   if (password === newPassword)
@@ -43,5 +47,6 @@ export const updatePassword = async (data) => {
 };
 
 export const updateContactInfo = async (data, email) => {
+  await dbConnect();
   await User.findOneAndUpdate({ email }, data);
 };

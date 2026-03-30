@@ -4,6 +4,7 @@ import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
 import { authConfig } from './auth.config';
 import { User } from './models/user.model';
+import { dbConnect } from './service/mongo';
 
 async function refreshAccessToken(token) {
   if (!token?.refreshToken) return null;
@@ -59,7 +60,9 @@ export const {
         if (!credentials) return null;
 
         try {
+          await dbConnect();
           const user = await User.findOne({ email: credentials.email })
+
             .select('+password')
             .lean();
           if (!user) {

@@ -10,10 +10,12 @@ import { Module } from '@/models/module.model';
 import { QuizSet } from '@/models/quizset.model';
 import { Testimonial } from '@/models/testimonial.model';
 import { User } from '@/models/user.model';
+import { dbConnect } from '@/service/mongo';
 import { notFound } from 'next/navigation';
 import { getUserById } from './user.queries';
 
 export const createCourse = async (payload) => {
+  await dbConnect();
   const session = await auth();
   const course = await Course.create({
     ...payload,
@@ -23,6 +25,7 @@ export const createCourse = async (payload) => {
 };
 
 export const getEnrollmentData = async () => {
+  await dbConnect();
   const session = await auth();
   const user = await User.findOne({ email: session?.user?.email }).lean();
 
@@ -48,6 +51,7 @@ export const getEnrollmentData = async () => {
 };
 
 export const getCourseList = async ({ queries, filter }) => {
+  await dbConnect();
   const session = await auth();
   const options = {
     sortBy: '-createdAt',
@@ -113,6 +117,7 @@ export const getCourseList = async ({ queries, filter }) => {
 };
 
 export const getCourseDetails = async (id) => {
+  await dbConnect();
   let course = await Course.findById(id)
     .populate({
       path: 'modules',
@@ -158,6 +163,7 @@ export const getCourseDetails = async (id) => {
 };
 
 export const getCoursesByInstructor = async (instructorId) => {
+  await dbConnect();
   const coursesByInstructor = await Course.find({
     instructor: instructorId,
   })
@@ -171,6 +177,7 @@ export const getCoursesByInstructor = async (instructorId) => {
 };
 
 export const getCourseInstructorStats = async (instructorId) => {
+  await dbConnect();
   const instructor = await getUserById(instructorId);
   let coursesByInstructor = await getCoursesByInstructor(instructorId);
   const courseIds = coursesByInstructor.map((c) => c.id);
@@ -217,6 +224,7 @@ export const getCourseInstructorStats = async (instructorId) => {
 };
 
 export const updateCourse = async (courseId, data) => {
+  await dbConnect();
   if (data.category) {
     const category = await Category.findOne({ title: data.category }).lean();
     await Course.findByIdAndUpdate(courseId, { category: category?._id });

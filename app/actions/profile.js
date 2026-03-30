@@ -4,6 +4,7 @@ import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { auth } from '@/auth';
 import { getLoggedInUser } from '@/lib/my-helpers';
 import { User } from '@/models/user.model';
+import { dbConnect } from '@/service/mongo';
 import {
   updateContactInfo,
   updatePassword,
@@ -14,6 +15,7 @@ import { revalidatePath } from 'next/cache';
 
 export const handleChangePersonalDetail = async (prevState, formData) => {
   try {
+    await dbConnect();
     const session = await auth();
     if (formData.get('email') !== session?.user?.email)
       return actionError('You are not allowed to update data of another user.');
@@ -41,6 +43,7 @@ export const handleChangePersonalDetail = async (prevState, formData) => {
 
 export const handleChangePassword = async (prevState, formData) => {
   try {
+    await dbConnect();
     const session = await auth();
     if (formData.get('email') !== session?.user?.email)
       return actionError('You are not allowed to update data of another user.');
@@ -66,6 +69,7 @@ export const handleChangePassword = async (prevState, formData) => {
 
 export const handleChangeContactInfo = async (prevState, formData) => {
   try {
+    await dbConnect();
     const session = await auth();
     const email = formData.get('email');
     if (email !== session?.user?.email)
@@ -98,6 +102,7 @@ cloudinary.config({
 });
 
 export const updateProfilePicture = async (cloudinaryUrl) => {
+  await dbConnect();
   const loggedInUser = await getLoggedInUser();
 
   await User.findByIdAndUpdate(loggedInUser?.id, {

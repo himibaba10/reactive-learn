@@ -1,6 +1,8 @@
 import { Watch } from '@/models/watch.model';
+import { dbConnect } from '@/service/mongo';
 
 export async function getCompletedLessons(userId, courseId) {
+  await dbConnect();
   const completedWatches = await Watch.find({
     user: userId,
     course: courseId,
@@ -10,3 +12,4 @@ export async function getCompletedLessons(userId, courseId) {
     .lean();
   return completedWatches.map((w) => w.lesson.toString());
 }
+

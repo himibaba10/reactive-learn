@@ -1,13 +1,16 @@
 'use server';
 import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { Course } from '@/models/course.model';
+import { dbConnect } from '@/service/mongo';
 import { existsSync, mkdirSync } from 'fs';
 import { unlink, writeFile } from 'fs/promises';
 import path from 'path';
 
 export async function uploadCourseImage(formData) {
   try {
+    await dbConnect();
     const file = formData.get('file');
+
     const courseId = formData.get('courseId');
 
     if (!file || typeof file === 'string') {
@@ -39,7 +42,9 @@ export async function uploadCourseImage(formData) {
 
 export async function deleteCourseImage(filename) {
   try {
+    await dbConnect();
     if (!filename) return actionSuccess(null);
+
 
     const imagePath = path.join(
       process.cwd(),

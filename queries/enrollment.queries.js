@@ -3,9 +3,11 @@ import { formatDate } from '@/lib/formatDate';
 import { Course } from '@/models/course.model';
 import { Enrollment } from '@/models/enrollment.model';
 import { User } from '@/models/user.model';
+import { dbConnect } from '@/service/mongo';
 import { getAReport } from './report.queries';
 
 export const addEnrollment = async (data) => {
+  await dbConnect();
   const enrollment = await Enrollment.create({
     ...data,
     method: 'stripe',
@@ -17,6 +19,7 @@ export const addEnrollment = async (data) => {
 };
 
 export const getEnrollmentInfo = async (data) => {
+  await dbConnect();
   const enrollment = await Enrollment.findOne({
     course: data.course,
     student: data.student,
@@ -26,6 +29,7 @@ export const getEnrollmentInfo = async (data) => {
 };
 
 export const getEnrollmentsForCourse = async (courseId) => {
+  await dbConnect();
   const enrollments = await Enrollment.find({ course: courseId })
     .populate({
       path: 'course',
@@ -63,6 +67,7 @@ export const getEnrollmentsWithReport = async (courseId) => {
 };
 
 export async function hasEnrollmentForCourse(courseId, studentId) {
+  await dbConnect();
   try {
     const enrollment = await Enrollment.findOne({
       course: courseId,

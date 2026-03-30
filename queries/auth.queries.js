@@ -1,8 +1,10 @@
 import { replaceMongoIdInObject } from '@/lib/convertDBData';
 import { User } from '@/models/user.model';
+import { dbConnect } from '@/service/mongo';
 import { hash } from 'bcryptjs';
 
 export const registerUser = async (data) => {
+  await dbConnect();
   try {
     const hashedPassword = await hash(data.password, 10);
 
@@ -13,3 +15,4 @@ export const registerUser = async (data) => {
     console.error(error);
   }
 };
+

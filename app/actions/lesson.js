@@ -4,10 +4,12 @@ import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { slugify } from '@/lib/utils';
 import { Lesson } from '@/models/lesson.model';
 import { Module } from '@/models/module.model';
+import { dbConnect } from '@/service/mongo';
 import { revalidatePath } from 'next/cache';
 
 export async function createLesson(moduleId, data) {
   try {
+    await dbConnect();
     let slug = slugify(data.title, { lower: true });
     let uniqueSlug = slug;
     let count = 1;
@@ -39,6 +41,7 @@ export async function createLesson(moduleId, data) {
 
 export async function reorderLessons(bulkUpdateData) {
   try {
+    await dbConnect();
     await Promise.all(
       bulkUpdateData.map(({ id, position }) =>
         Lesson.findByIdAndUpdate(id, { position }),
@@ -52,6 +55,7 @@ export async function reorderLessons(bulkUpdateData) {
 
 export async function deleteLesson(lessonId) {
   try {
+    await dbConnect();
     await Module.findOneAndUpdate(
       { lessonIds: lessonId },
       { $pull: { lessonIds: lessonId } },

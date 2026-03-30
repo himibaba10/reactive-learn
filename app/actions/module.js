@@ -6,10 +6,12 @@ import { Course } from '@/models/course.model';
 import { Lesson } from '@/models/lesson.model';
 import { Module } from '@/models/module.model';
 import { createModuleToDB } from '@/queries/module.queries';
+import { dbConnect } from '@/service/mongo';
 import { revalidatePath } from 'next/cache';
 
 export async function reorderModules(bulkUpdateData) {
   try {
+    await dbConnect();
     await Promise.all(
       bulkUpdateData.map(({ id, position }) =>
         Module.findByIdAndUpdate(id, { position }),
@@ -24,6 +26,7 @@ export async function reorderModules(bulkUpdateData) {
 
 export const createModule = async (courseId, data) => {
   try {
+    await dbConnect();
     const result = await createModuleToDB(courseId, data);
     return actionSuccess(result);
   } catch (error) {
@@ -33,6 +36,7 @@ export const createModule = async (courseId, data) => {
 
 export const togglePublishModule = async (moduleId) => {
   try {
+    await dbConnect();
     const mod = await Module.findById(moduleId).select('status').lean();
 
     const updatedModule = await Module.findByIdAndUpdate(
@@ -55,6 +59,7 @@ export const togglePublishModule = async (moduleId) => {
 
 export async function deleteModule(moduleId) {
   try {
+    await dbConnect();
     const mod = await Module.findById(moduleId).select('lessonIds').lean();
 
     if (mod?.lessonIds?.length) {

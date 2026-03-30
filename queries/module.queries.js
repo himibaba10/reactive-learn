@@ -7,9 +7,11 @@ import {
 import { slugify } from '@/lib/utils';
 import { Course } from '@/models/course.model';
 import { Module } from '@/models/module.model';
+import { dbConnect } from '@/service/mongo';
 import { redirect } from 'next/navigation';
 
 export const getModulesForCourse = async (courseId) => {
+  await dbConnect();
   const modules = await Module.find({ course: courseId })
     .sort({ position: 1 })
     .lean();
@@ -17,6 +19,7 @@ export const getModulesForCourse = async (courseId) => {
 };
 
 export const createModuleToDB = async (courseId, data) => {
+  await dbConnect();
   let slug = slugify(data.title);
   let uniqueSlug = slug;
   let count = 1;
@@ -43,6 +46,7 @@ export const createModuleToDB = async (courseId, data) => {
 };
 
 export const getModuleById = async (moduleId) => {
+  await dbConnect();
   const mod = await Module.findById(moduleId).lean();
 
   if (!mod) redirect('/');
@@ -51,5 +55,6 @@ export const getModuleById = async (moduleId) => {
 };
 
 export const updateModule = async (moduleId, data) => {
+  await dbConnect();
   await Module.findByIdAndUpdate(moduleId, data);
 };

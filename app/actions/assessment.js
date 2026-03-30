@@ -5,10 +5,12 @@ import { auth } from '@/auth';
 import { Assessment } from '@/models/assessment.model';
 import { QuizSet } from '@/models/quizset.model';
 import { Report } from '@/models/report.model';
+import { dbConnect } from '@/service/mongo';
 import { revalidatePath } from 'next/cache';
 
 export const submitQuizSet = async ({ quizSetId, answers, courseId }) => {
   try {
+    await dbConnect();
     const session = await auth();
   const userId = session?.user?.id;
 

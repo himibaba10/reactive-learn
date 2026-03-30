@@ -8,10 +8,12 @@ import { Module } from '@/models/module.model';
 import { Report } from '@/models/report.model';
 import { Watch } from '@/models/watch.model';
 import { getModuleById } from '@/queries/module.queries';
+import { dbConnect } from '@/service/mongo';
 import { revalidatePath } from 'next/cache';
 
 export const startWatch = async ({ lessonId, moduleId, courseId }) => {
   try {
+    await dbConnect();
     const session = await auth();
     const userId = session?.user?.id;
     await Watch.findOneAndUpdate(
@@ -35,6 +37,7 @@ export const startWatch = async ({ lessonId, moduleId, courseId }) => {
 
 export const completeWatch = async ({ lessonId, courseId, moduleId }) => {
   try {
+    await dbConnect();
     const loggedInUser = await getLoggedInUser();
 
     // Step 1: mark watch as completed
