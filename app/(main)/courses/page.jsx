@@ -24,16 +24,13 @@ const CoursesPage = async ({ searchParams }) => {
     };
   }
 
-  const [courses, categories] = await Promise.all([
-    getCourseList({ queries, filter }),
-    getCategories(),
-  ]);
+  const [courses, categories] = await Promise.all([getCourseList({ queries, filter }), getCategories()]);
 
   return (
-    <section className='container space-y-6   dark:bg-transparent py-6'>
+    <section className='container space-y-6 dark:bg-transparent py-6'>
       <div className='flex items-baseline justify-between  border-gray-200 border-b pb-6 flex-col gap-4 lg:flex-row'>
         <SearchCourse />
-        <div className='flex items-center justify-end gap-2 max-lg:w-full'>
+        <div className='flex items-center justify-between lg:justify-end gap-2 max-lg:w-full'>
           <SortCourse />
           <FilterCourseMobile />
         </div>

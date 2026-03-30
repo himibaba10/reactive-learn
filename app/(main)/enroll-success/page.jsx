@@ -8,9 +8,7 @@ import { stripe } from '@/service/stripe';
 import { CircleCheck } from 'lucide-react';
 import Link from 'next/link';
 
-const EnrollSuccessPage = async ({
-  searchParams: { session_id, courseId },
-}) => {
+const EnrollSuccessPage = async ({ searchParams: { session_id, courseId } }) => {
   if (!session_id) throw new Error('Invalid session id.');
 
   const session = await auth();
@@ -57,7 +55,7 @@ const EnrollSuccessPage = async ({
         to: teacherEmail,
         subject: `Someone purchased ${courseTitle} course`,
         message: `
-        <p>Hello, ${teacherName}. This message is to inform you that a student purchased.</p>
+        <p>Hello, ${teacherName}. This message is to inform you that a student purchased <b>${courseTitle}</b> course.</p>
         <p>
           Student info:<br/>
           Name: <strong>${customerName}</strong><br/>
@@ -77,8 +75,7 @@ const EnrollSuccessPage = async ({
           <>
             <CircleCheck className='w-32 h-32 bg-emerald-700 rounded-full p-0 text-green-600' />
             <h1 className='text-xl md:text-2xl lg:text-3xl'>
-              Congratulations, <strong>{customerName}</strong>! Your Enrollment
-              was Successful for <strong>{courseTitle}</strong>.
+              Congratulations, <strong>{customerName}</strong>! Your Enrollment was Successful for <strong>{courseTitle}</strong>.
             </h1>
           </>
         )}
