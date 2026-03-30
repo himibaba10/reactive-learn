@@ -53,7 +53,6 @@ export const getEnrollmentData = async () => {
   return replaceMongoIdInArray(enrollments);
 };
 
-
 export const getCourseList = async ({ queries, filter }) => {
   await dbConnect();
   const session = await auth();
@@ -235,4 +234,25 @@ export const updateCourse = async (courseId, data) => {
     return category;
   }
   await Course.findByIdAndUpdate(courseId, data);
+};
+
+export const getRelatedCourses = async (courseId, categoryId, limit = 6) => {
+  await dbConnect();
+  if (!categoryId) return [];
+
+  const relatedCourses = await Course.find({
+    category: categoryId,
+    _id: { $ne: courseId },
+    active: true,
+  })
+    .select('title subtitle thumbnail modules price category instructor')
+    .populate({ path: 'category', model: Category })
+    .populate({ path: 'instructor', model: User })
+    .populate({ path: 'modules', model: Module })
+    .populate({ path: 'testimonials', model: Testimonial })
+    .sort('-createdAt')
+    .limit(limit)
+    .lean();
+
+  return replaceMongoIdInArray(relatedCourses);
 };

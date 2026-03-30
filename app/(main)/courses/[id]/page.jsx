@@ -18,6 +18,7 @@ export async function generateMetadata({ params: { id } }) {
 
 const SingleCoursePage = async ({ params: { id } }) => {
   const course = await getCourseDetails(id);
+
   return (
     <>
       <CourseDetailsIntro course={course} />
@@ -26,7 +27,7 @@ const SingleCoursePage = async ({ params: { id } }) => {
 
       {course?.testimonials && <Testimonials testimonials={course?.testimonials} />}
 
-      <RelatedCourses />
+      <RelatedCourses courseId={id} categoryId={course?.category?._id} />
     </>
   );
 };

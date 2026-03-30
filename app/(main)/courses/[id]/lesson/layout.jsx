@@ -26,7 +26,7 @@ const CourseLayout = async ({ children, params: { id } }) => {
       <div className='h-[80px] lg:pl-96 fixed top-[60px] inset-y-0 w-full z-10'>
         <div className='flex lg:hidden p-4 border-b h-full items-center bg-background shadow-sm relative'>
           {/* Course Sidebar For Mobile */}
-          <CourseSidebarMobile courseId={id} />
+          <CourseSidebarMobile course={course} studentId={loggedinUser.id} />
           {/* <NavbarRoutes /> */}
         </div>
       </div>

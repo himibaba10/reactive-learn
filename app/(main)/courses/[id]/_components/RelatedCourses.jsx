@@ -1,61 +1,12 @@
 import { SectionTitle } from '@/components/section-title';
-import { Button } from '@/components/ui/button';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
-import { formatPrice } from '@/lib/formatPrice';
-import { ArrowRight, BookOpen } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { getRelatedCourses } from '@/queries/courses.queries';
+import CourseCard from '../../_components/CourseCard';
 
-const RelatedCourses = () => {
-  const courses = [
-    {
-      id: 1,
-      title: 'Design',
-      thumbnail: '/assets/images/categories/design.jpg',
-    },
+const RelatedCourses = async ({ courseId, categoryId }) => {
+  const courses = await getRelatedCourses(courseId, categoryId);
 
-    {
-      id: 3,
-      title: 'Development',
-      thumbnail: '/assets/images/categories/development.jpg',
-    },
-    {
-      id: 4,
-      title: 'Marketing',
-      thumbnail: '/assets/images/categories/marketing.jpg',
-    },
-    {
-      id: 5,
-      title: 'IT & Software',
-      thumbnail: '/assets/images/categories/it_software.jpg',
-    },
-    {
-      id: 6,
-      title: 'Personal Development',
-      thumbnail: '/assets/images/categories/personal_development.jpg',
-    },
-    {
-      id: 7,
-      title: 'Business',
-      thumbnail: '/assets/images/categories/business.jpg',
-    },
-    {
-      id: 8,
-      title: 'Photography',
-      thumbnail: '/assets/images/categories/photography.jpg',
-    },
-    {
-      id: 9,
-      title: 'Music',
-      thumbnail: '/assets/images/categories/music.jpg',
-    },
-  ];
+  if (!courses || courses.length === 0) return null;
 
   return (
     <section className=''>
@@ -70,55 +21,13 @@ const RelatedCourses = () => {
           <CarouselPrevious />
           <CarouselNext />
           <CarouselContent>
-            {courses.map((course) => (
-              <CarouselItem
-                key={course.id}
-                className='md:basis-1/2 lg:basis-1/3'
-              >
-                <Link href={`/courses/${course.id}`}>
-                  <div className='group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full'>
-                    <div className='relative w-full aspect-video rounded-md overflow-hidden'>
-                      <Image
-                        src='/assets/images/courses/course_1.png'
-                        alt={'course'}
-                        className='object-cover'
-                        fill
-                      />
-                    </div>
-                    <div className='flex flex-col pt-2'>
-                      <div className='text-lg md:text-base font-medium group-hover:text-sky-700 line-clamp-2'>
-                        Reactive Accelerator
-                      </div>
-                      <p className='text-xs text-muted-foreground'>
-                        Development
-                      </p>
-                      <div className='my-3 flex items-center gap-x-2 text-sm md:text-xs'>
-                        <div className='flex items-center gap-x-1 text-muted-foreground'>
-                          <div>
-                            <BookOpen className='w-4' />
-                          </div>
-                          <span>4 Chapters</span>
-                        </div>
-                      </div>
-
-                      <div className='flex items-center justify-between mt-4'>
-                        <p className='text-md md:text-sm font-medium text-foreground'>
-                          {formatPrice(49)}
-                        </p>
-
-                        <Button
-                          variant='ghost'
-                          className='text-xs text-sky-700 h-7 gap-1'
-                        >
-                          Enroll
-                          <ArrowRight className='w-3' />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </CarouselItem>
-            ))}
+            {courses.map((course) => {
+              return (
+                <CarouselItem key={course.id} className='md:basis-1/2 lg:basis-1/3'>
+                  <CourseCard course={course} />
+                </CarouselItem>
+              );
+            })}
           </CarouselContent>
         </Carousel>
       </div>

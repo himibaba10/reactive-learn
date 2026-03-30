@@ -3,9 +3,7 @@ import mongoose from 'mongoose';
 const MONGO_URI = process.env.MONGODB_CONNECTION_STRING;
 
 if (!MONGO_URI) {
-  throw new Error(
-    'Please define the MONGODB_CONNECTION_STRING environment variable inside .env.local'
-  );
+  throw new Error('Please define the MONGODB_CONNECTION_STRING environment variable inside .env.local');
 }
 
 let cached = global.mongoose;
@@ -31,7 +29,6 @@ export const dbConnect = async () => {
 
   try {
     cached.conn = await cached.promise;
-    console.log('Database connected successfully');
   } catch (e) {
     cached.promise = null;
     throw e;
@@ -39,4 +36,3 @@ export const dbConnect = async () => {
 
   return cached.conn;
 };
-
