@@ -29,22 +29,26 @@ export const updatePassword = async (data) => {
   const { email, password, newPassword, confirmNewPassword } = data;
 
   if (password === newPassword)
-    throw new Error('You cannot use old password as a new one.');
+    throw new Error('You cannot use your old password as the new one.');
 
   if (newPassword !== confirmNewPassword)
-    throw new Error('New password and confirm new password in not the same.');
+    throw new Error('New password and confirm password do not match.');
 
   const user = await User.findOne({ email });
+  if (!user) {
+    throw new Error('User not found.');
+  }
 
-  const passwordMatched = await compare(password, user?.password);
+  const passwordMatched = await compare(password, user.password);
 
-  if (!passwordMatched) throw new Error('Incorrect password.');
+  if (!passwordMatched) throw new Error('Current password is incorrect.');
 
   const hashedPassword = await hash(newPassword, 10);
 
   user.password = hashedPassword;
   await user.save();
 };
+
 
 export const updateContactInfo = async (data, email) => {
   await dbConnect();

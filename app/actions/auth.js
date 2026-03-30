@@ -51,9 +51,15 @@ export async function handleLoginUser(prevState, formData) {
 }
 
 export async function handleSocialLogin(formData) {
-  const action = formData.get('action');
+  try {
+    const action = formData.get('action');
 
-  await signIn(action, {
-    redirectTo: '/courses',
-  });
+    await signIn(action, {
+      redirectTo: '/courses',
+    });
+  } catch (error) {
+    console.error('Social login error:', error);
+    return actionError(error);
+  }
 }
+

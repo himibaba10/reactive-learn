@@ -102,15 +102,21 @@ cloudinary.config({
 });
 
 export const updateProfilePicture = async (cloudinaryUrl) => {
-  await dbConnect();
-  const loggedInUser = await getLoggedInUser();
+  try {
+    await dbConnect();
+    const loggedInUser = await getLoggedInUser();
 
-  await User.findByIdAndUpdate(loggedInUser?.id, {
-    profilePicture: cloudinaryUrl,
-    updatedAt: new Date(),
-  });
+    await User.findByIdAndUpdate(loggedInUser?.id, {
+      profilePicture: cloudinaryUrl,
+      updatedAt: new Date(),
+    });
 
-  revalidatePath('/profile');
+    revalidatePath('/profile');
 
-  return actionSuccess(cloudinaryUrl);
+    return actionSuccess(cloudinaryUrl);
+  } catch (error) {
+    console.error('Profile picture update error:', error);
+    return actionError(error);
+  }
 };
+

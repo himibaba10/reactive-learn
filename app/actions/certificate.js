@@ -9,32 +9,42 @@ import { getUserByEmail } from '@/queries/user.queries';
 import fontkit from '@pdf-lib/fontkit';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 
-// Fetch custom fonts
-const kalamFontUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/fonts/kalam/Kalam-Regular.ttf`;
-const kalamFontBytes = await fetch(kalamFontUrl).then((res) =>
-  res.arrayBuffer(),
-);
-
-const montserratItalicFontUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/fonts/montserrat/Montserrat-Italic.ttf`;
-const montserratItalicFontBytes = await fetch(montserratItalicFontUrl).then(
-  (res) => res.arrayBuffer(),
-);
-
-const montserratFontUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/fonts/montserrat/Montserrat-Medium.ttf`;
-const montserratFontBytes = await fetch(montserratFontUrl).then((res) =>
-  res.arrayBuffer(),
-);
-
 export async function generateCertificate(courseId) {
   try {
+    // Fetch custom fonts
+    const kalamFontUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/fonts/kalam/Kalam-Regular.ttf`;
+    const kalamFontBytes = await fetch(kalamFontUrl).then((res) => {
+      if (!res.ok) throw new Error('Failed to fetch Kalam font');
+      return res.arrayBuffer();
+    });
+
+    const montserratItalicFontUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/fonts/montserrat/Montserrat-Italic.ttf`;
+    const montserratItalicFontBytes = await fetch(montserratItalicFontUrl).then(
+      (res) => {
+        if (!res.ok) throw new Error('Failed to fetch Montserrat Italic font');
+        return res.arrayBuffer();
+      },
+    );
+
+    const montserratFontUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/fonts/montserrat/Montserrat-Medium.ttf`;
+    const montserratFontBytes = await fetch(montserratFontUrl).then((res) => {
+      if (!res.ok) throw new Error('Failed to fetch Montserrat font');
+      return res.arrayBuffer();
+    });
+
     /* -----------------
      *
-     * Configuratios
+     * configurations
      *
      *-------------------*/
     const course = await getCourseDetails(courseId);
+    if (!course) throw new Error('Course not found');
+
     const session = await auth();
+    if (!session?.user?.email) throw new Error('User not authenticated');
+
     const loggedInUser = await getUserByEmail(session?.user?.email);
+    if (!loggedInUser) throw new Error('User not found');
 
     const report = await getAReport({
       course: courseId,
@@ -59,7 +69,6 @@ export async function generateCertificate(courseId) {
 
     const kalamFont = await pdfDoc.embedFont(kalamFontBytes);
     const montserratItalic = await pdfDoc.embedFont(montserratItalicFontBytes);
-
     const montserrat = await pdfDoc.embedFont(montserratFontBytes);
 
     const page = pdfDoc.addPage([841.89, 595.28]);
@@ -73,7 +82,6 @@ export async function generateCertificate(courseId) {
      *-------------------*/
     const logoFontSize = 30;
     const logoText = 'Reactive Learn';
-    // title text width
     const logoTextWidth = montserrat.widthOfTextAtSize(logoText, logoFontSize);
 
     page.drawText(logoText, {
@@ -89,10 +97,8 @@ export async function generateCertificate(courseId) {
      * Title
      *
      *-------------------*/
-
     const titleFontSize = 30;
     const titleText = 'Certificate Of Completion';
-    // title text width
     const titleTextWidth = montserrat.widthOfTextAtSize(
       titleText,
       titleFontSize,
@@ -112,9 +118,7 @@ export async function generateCertificate(courseId) {
      *
      *-------------------*/
     const nameLabelText = 'This certificate is hereby bestowed upon';
-
     const nameLabelFontSize = 20;
-    // title text width
     const nameLabelTextWidth = montserratItalic.widthOfTextAtSize(
       nameLabelText,
       nameLabelFontSize,
@@ -134,9 +138,7 @@ export async function generateCertificate(courseId) {
      *
      *-------------------*/
     const nameText = completionInfo.name;
-
     const nameFontSize = 50;
-    // title text width
     const nameTextWidth = timesRomanFont.widthOfTextAtSize(
       nameText,
       nameFontSize,
@@ -156,9 +158,7 @@ export async function generateCertificate(courseId) {
      *
      *-------------------*/
     const detailsText = `This is to certify that ${completionInfo.name} successfully completed the ${completionInfo.courseName} course on ${completionInfo.completionDate} by ${completionInfo.instructor}`;
-
     const detailsFontSize = 16;
-    // title text width
     const detailsTextWidth = montserrat.widthOfTextAtSize(
       titleText,
       titleFontSize,
@@ -203,8 +203,10 @@ export async function generateCertificate(courseId) {
     });
 
     const signUrl = `${process.env.NEXT_PUBLIC_BASE_URL}${completionInfo.sign}`;
-
-    const signBytes = await fetch(signUrl).then((res) => res.arrayBuffer());
+    const signBytes = await fetch(signUrl).then((res) => {
+      if (!res.ok) throw new Error('Failed to fetch signature image');
+      return res.arrayBuffer();
+    });
     const sign = await pdfDoc.embedPng(signBytes);
 
     page.drawImage(sign, {
@@ -214,12 +216,11 @@ export async function generateCertificate(courseId) {
       height: 150,
     });
 
-    // pattern
     const patternUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/pattern.jpg`;
-
-    const patternBytes = await fetch(patternUrl).then((res) =>
-      res.arrayBuffer(),
-    );
+    const patternBytes = await fetch(patternUrl).then((res) => {
+      if (!res.ok) throw new Error('Failed to fetch background pattern');
+      return res.arrayBuffer();
+    });
     const pattern = await pdfDoc.embedJpg(patternBytes);
 
     page.drawImage(pattern, {
@@ -229,16 +230,13 @@ export async function generateCertificate(courseId) {
       height: height,
       opacity: 0.2,
     });
-    /* -----------------
-     *
-     * Generate and send Response
-     *
-     *-------------------*/
+
     const pdfBytes = await pdfDoc.save();
     const base64 = Buffer.from(pdfBytes).toString('base64');
     return actionSuccess(base64);
   } catch (error) {
-    console.error(error);
+    console.error('Certificate generation error:', error);
     return actionError(error);
   }
 }
+

@@ -27,7 +27,10 @@ export const createCourse = async (payload) => {
 export const getEnrollmentData = async () => {
   await dbConnect();
   const session = await auth();
-  const user = await User.findOne({ email: session?.user?.email }).lean();
+  if (!session?.user?.email) return [];
+
+  const user = await User.findOne({ email: session.user.email }).lean();
+  if (!user) return [];
 
   const enrollments = await Enrollment.find({ student: user._id })
     .populate({
@@ -49,6 +52,7 @@ export const getEnrollmentData = async () => {
 
   return replaceMongoIdInArray(enrollments);
 };
+
 
 export const getCourseList = async ({ queries, filter }) => {
   await dbConnect();

@@ -63,6 +63,10 @@ export async function deleteQuizSet(quizSetId) {
     await dbConnect();
     const quizSet = await QuizSet.findById(quizSetId);
 
+    if (!quizSet) {
+      throw new Error('Quiz set not found.');
+    }
+
     await Quiz.deleteMany({ _id: { $in: quizSet.quizIds } });
     await QuizSet.findByIdAndDelete(quizSetId);
 
@@ -72,3 +76,4 @@ export async function deleteQuizSet(quizSetId) {
     return actionError(error);
   }
 }
+

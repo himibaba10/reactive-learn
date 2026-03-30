@@ -55,16 +55,18 @@ export const createCheckoutSession = async (formData) => {
 
 export const createPaymentIntent = async (data) => {
   try {
-    const paymentIntent = await Stripe.paymentIntent.create({
-    amount: formatAmountForStripe(formData.get('coursePrice')),
-    automatic_payment_methods: { enabled: true },
-    currency: 'BDT',
-  });
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: formatAmountForStripe(data.coursePrice),
+      automatic_payment_methods: { enabled: true },
+      currency: 'BDT',
+    });
 
     return actionSuccess({
       client_secret: paymentIntent.client_secret,
     });
   } catch (error) {
+    console.error('Stripe payment intent error:', error);
     return actionError(error);
   }
 };
+
