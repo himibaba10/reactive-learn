@@ -70,6 +70,9 @@ export async function handleSocialLogin(formData) {
       redirectTo: '/courses',
     });
   } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
     console.error('Social login error:', error);
     return actionError(error);
   }

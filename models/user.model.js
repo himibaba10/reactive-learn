@@ -16,7 +16,7 @@ const userSchema = new Schema(
     },
     designation: String,
     password: {
-      required: true,
+      required: false,
       type: String,
       select: false,
     },

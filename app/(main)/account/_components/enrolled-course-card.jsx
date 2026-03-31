@@ -15,8 +15,6 @@ const EnrolledCourseCard = async ({ enrollment, studentId }) => {
   const completedModules = report?.totalCompletedModules?.length ?? 0;
   const moduleCompletionProgress = calculateModuleProgress(completedModules, course?.modules?.length);
 
-  console.log({ moduleCompletionProgress });
-
   return (
     <div className='group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full'>
       <Link href={`/courses/${course._id}/lesson`}>

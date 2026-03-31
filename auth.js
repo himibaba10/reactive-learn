@@ -69,10 +69,7 @@ export const {
             throw new InvalidCredentialsError();
           }
 
-          const isPasswordMatched = await compare(
-            credentials.password,
-            user.password,
-          );
+          const isPasswordMatched = await compare(credentials.password, user.password);
 
           if (!isPasswordMatched) throw new InvalidCredentialsError();
 
@@ -105,6 +102,39 @@ export const {
 
     async jwt({ token, user, account }) {
       if (user && account) {
+        if (account.provider === 'google') {
+          try {
+            await dbConnect();
+            let dbUser = await User.findOne({ email: user.email }).lean();
+
+            if (!dbUser) {
+              const nameParts = user.name ? user.name.split(' ') : ['Student'];
+              const firstName = nameParts[0];
+              const lastName = nameParts.slice(1).join(' ') || ' ';
+
+              dbUser = await User.create({
+                email: user.email,
+                firstName: firstName,
+                lastName: lastName,
+                profilePicture: user.image,
+                role: 'student',
+              });
+            }
+
+            return {
+              ...token,
+              id: dbUser._id.toString(),
+              role: dbUser.role ?? 'student',
+              provider: account.provider,
+              accessToken: account?.access_token,
+              accessTokenExpires: Date.now() + (account?.expires_in ?? 3600) * 1000,
+              refreshToken: account?.refresh_token,
+            };
+          } catch (err) {
+            console.error('Error handling Google user in jwt callback:', err);
+          }
+        }
+
         return {
           ...token,
           id: user._id?.toString() ?? user.id,
