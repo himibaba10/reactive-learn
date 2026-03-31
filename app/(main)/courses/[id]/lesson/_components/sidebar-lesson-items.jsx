@@ -27,7 +27,7 @@ export const SidebarLessonItem = ({
       href={`/courses/${courseId}/lesson?name=${lesson?.slug}&module=${moduleId}`}
       className={cn(
         'flex items-center gap-x-2 text-muted-foreground text-sm font-[500] transition-all hover:text-slate-600 p-2 rounded-md',
-        isActive && 'text-foreground hover:text-foreground bg-gray-100',
+        isActive && 'text-foreground hover:text-foreground bg-muted',
         isCompleted && 'text-emerald-700 hover:text-emerald-700',
       )}
     >

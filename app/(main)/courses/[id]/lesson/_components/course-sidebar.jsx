@@ -1,16 +1,14 @@
 import { CourseProgress } from '@/components/course-progress';
 import { calculateModuleProgress } from '@/lib/module-helpers';
-import { getUserAssessment } from '@/queries/assessment.queries';
-import { getQuizzesFromQuizSet } from '@/queries/quiz.queries';
 import { getAReport } from '@/queries/report.queries';
 import { getTestimonialByUser } from '@/queries/review.queries';
 import { getCompletedLessons } from '@/queries/watch.queries';
 import { DownloadCertificate } from './download-certificate';
 import { GiveReview } from './give-review';
-import QuizModal from './quiz-modal';
+import { QuizTrigger } from './quiz-trigger';
 import { SidebarModules } from './sidebar-modules';
 
-export const CourseSidebar = async ({ course, studentId }) => {
+export const CourseSidebar = async ({ course, studentId, quizData }) => {
   const report = await getAReport({ courseId: course?._id, studentId });
   const completedLessons = await getCompletedLessons(studentId, course?._id);
   const existingReview = await getTestimonialByUser({
@@ -26,13 +24,7 @@ export const CourseSidebar = async ({ course, studentId }) => {
 
   const isCourseCompleted = report?.courseStatus === 'completed';
 
-  const quizSet = course?.quizSet;
-  const quizzes = await getQuizzesFromQuizSet(quizSet?._id);
-
-  const userAssessment = await getUserAssessment({
-    quizSetId: quizSet?._id,
-    courseId: course?._id,
-  });
+  const { quizSet, quizzes, userAssessment } = quizData;
 
   return (
     <div className='h-full border-r flex flex-col overflow-y-auto shadow-sm'>
@@ -54,7 +46,7 @@ export const CourseSidebar = async ({ course, studentId }) => {
         <GiveReview courseId={course?._id} hasReviewed={!!existingReview} />
       </div>
       <div className='flex justify-center my-5'>
-        <QuizModal
+        <QuizTrigger
           quizSet={quizSet}
           quizzes={quizzes}
           courseId={course?._id}

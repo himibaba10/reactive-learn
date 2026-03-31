@@ -13,6 +13,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import QuizCard from './quiz-card';
+import { useSidebarSheet } from './sidebar-sheet-context';
 
 export default function QuizModal({
   quizSet,
@@ -22,6 +23,7 @@ export default function QuizModal({
 }) {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const sidebarSheet = useSidebarSheet();
   const totalQuizzes = quizzes?.length || 0;
   const [quizIndex, setQuizIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
@@ -128,7 +130,10 @@ export default function QuizModal({
         quizSetTitle={quizSet?.title}
         description={quizSet?.description}
         totalMark={totalMark}
-        onBtnClick={() => setOpen(true)}
+        onBtnClick={() => {
+          sidebarSheet?.close();
+          setOpen(true);
+        }}
         buttonText={userAssessment ? 'Check Options' : 'Participate in Quiz'}
       />
 

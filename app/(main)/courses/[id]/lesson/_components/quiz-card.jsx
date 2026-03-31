@@ -9,7 +9,7 @@ const QuizCard = ({
   buttonText,
 }) => {
   return (
-    <div className='max-w-[270px] bg-background border border-border rounded-md dark:bg-gray-800 dark:border-gray-700 overflow-hidden'>
+    <div className='max-w-[270px] bg-background border border-border rounded-md overflow-hidden'>
       <div className='flex h-32 items-center justify-center bg-gradient-to-r from-sky-500 to-indigo-500 px-6 text-center'>
         <span className='text-lg font-semibold text-white'>{quizSetTitle}</span>
       </div>
@@ -20,7 +20,7 @@ const QuizCard = ({
             {totalMark}
           </Badge>
         </div>
-        <p className='mb-4 font-normal text-muted-foreground dark:text-gray-400 text-sm'>
+        <p className='mb-4 font-normal text-muted-foreground text-sm'>
           {description}
         </p>
         <Button
