@@ -15,11 +15,13 @@ export async function handleRegisterUser(prevState, formData) {
       return actionError('Passwords do not match. Please try again.');
     }
 
+    const formRole = formData.get('user-role');
+
     const input = {
       firstName: formData.get('first-name'),
       lastName: formData.get('last-name'),
       email: formData.get('email'),
-      role: formData.get('user-role'),
+      role: formRole === 'instructor' ? 'teacher' : formRole,
       password: formData.get('password'),
       confirmPassword: formData.get('confirm-password'),
     };
