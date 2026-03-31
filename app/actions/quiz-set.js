@@ -7,9 +7,15 @@ import { Quiz } from '@/models/quiz.model';
 import { QuizSet } from '@/models/quizset.model';
 import { dbConnect } from '@/service/mongo';
 import { revalidatePath } from 'next/cache';
+import { auth } from '@/auth';
 
 export async function createQuizSet(data) {
   try {
+    const session = await auth();
+    if (session?.user?.role !== 'instructor') {
+      return actionError('Unauthorized', 401);
+    }
+
     await dbConnect();
     let slug = slugify(data.title);
     let uniqueSlug = slug;
@@ -34,6 +40,11 @@ export async function createQuizSet(data) {
 
 export const updateQuizSet = async (quizSetId, data) => {
   try {
+    const session = await auth();
+    if (session?.user?.role !== 'instructor') {
+      return actionError('Unauthorized', 401);
+    }
+
     await dbConnect();
     await QuizSet.findByIdAndUpdate(quizSetId, data);
     revalidatePath('/dashboard');
@@ -45,6 +56,11 @@ export const updateQuizSet = async (quizSetId, data) => {
 
 export async function togglePublishQuizSet(quizSetId, currentStatus) {
   try {
+    const session = await auth();
+    if (session?.user?.role !== 'instructor') {
+      return actionError('Unauthorized', 401);
+    }
+
     await dbConnect();
     const newStatus = currentStatus === 'active' ? 'draft' : 'active';
 
@@ -60,6 +76,11 @@ export async function togglePublishQuizSet(quizSetId, currentStatus) {
 
 export async function deleteQuizSet(quizSetId) {
   try {
+    const session = await auth();
+    if (session?.user?.role !== 'instructor') {
+      return actionError('Unauthorized', 401);
+    }
+
     await dbConnect();
     const quizSet = await QuizSet.findById(quizSetId);
 

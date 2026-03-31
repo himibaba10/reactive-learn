@@ -8,11 +8,19 @@ import { Module } from '@/models/module.model';
 import { dbConnect } from '@/service/mongo';
 import { revalidatePath } from 'next/cache';
 import { deleteCourseImage } from './course-image';
+import { auth } from '@/auth';
 
 export const togglePublishCourse = async (courseId) => {
   try {
+    const session = await auth();
+    if (!session?.user?.id) return actionError('Unauthorized', 401);
+
     await dbConnect();
-    const course = await Course.findById(courseId).select('active').lean();
+    const course = await Course.findById(courseId).select('active instructor').lean();
+
+    if (course?.instructor?.toString() !== session.user.id) {
+      return actionError('Forbidden', 403);
+    }
 
     const updatedCourse = await Course.findByIdAndUpdate(
       courseId,
@@ -34,8 +42,15 @@ export const togglePublishCourse = async (courseId) => {
 
 export async function deleteCourse(courseId) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) return actionError('Unauthorized', 401);
+
     await dbConnect();
-    const course = await Course.findById(courseId).select('modules').lean();
+    const course = await Course.findById(courseId).select('modules instructor').lean();
+
+    if (course?.instructor?.toString() !== session.user.id) {
+      return actionError('Forbidden', 403);
+    }
 
     if (course?.modules?.length) {
       const modules = await Module.find(
@@ -63,7 +78,16 @@ export async function deleteCourse(courseId) {
 
 export async function updateCourseQuizSet(courseId, quizSetId) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) return actionError('Unauthorized', 401);
+
     await dbConnect();
+
+    const course = await Course.findById(courseId).select('instructor').lean();
+    if (course?.instructor?.toString() !== session.user.id) {
+      return actionError('Forbidden', 403);
+    }
+
     await Course.findByIdAndUpdate(courseId, { quizSet: quizSetId });
 
     revalidatePath(`/dashboard/courses/${courseId}`);

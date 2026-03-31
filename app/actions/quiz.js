@@ -6,9 +6,15 @@ import { Quiz } from '@/models/quiz.model';
 import { QuizSet } from '@/models/quizset.model';
 import { dbConnect } from '@/service/mongo';
 import { revalidatePath } from 'next/cache';
+import { auth } from '@/auth';
 
 export async function updateQuiz(quizId, data) {
   try {
+    const session = await auth();
+    if (session?.user?.role !== 'instructor') {
+      return actionError('Unauthorized', 401);
+    }
+
     await dbConnect();
     await Quiz.findByIdAndUpdate(quizId, data);
     revalidatePath('/dashboard');
@@ -20,6 +26,11 @@ export async function updateQuiz(quizId, data) {
 
 export async function createQuiz(quizSetId, quizData) {
   try {
+    const session = await auth();
+    if (session?.user?.role !== 'instructor') {
+      return actionError('Unauthorized', 401);
+    }
+
     await dbConnect();
     let slug = slugify(quizData.question);
     let uniqueSlug = slug;
@@ -48,6 +59,11 @@ export async function createQuiz(quizSetId, quizData) {
 
 export async function deleteQuiz(quizSetId, quizId) {
   try {
+    const session = await auth();
+    if (session?.user?.role !== 'instructor') {
+      return actionError('Unauthorized', 401);
+    }
+
     await dbConnect();
     await Quiz.findByIdAndDelete(quizId);
 

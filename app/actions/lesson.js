@@ -6,9 +6,14 @@ import { Lesson } from '@/models/lesson.model';
 import { Module } from '@/models/module.model';
 import { dbConnect } from '@/service/mongo';
 import { revalidatePath } from 'next/cache';
+import { auth } from '@/auth';
+import { Course } from '@/models/course.model';
 
 export async function createLesson(moduleId, data) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) return actionError('Unauthorized', 401);
+
     await dbConnect();
     let slug = slugify(data.title, { lower: true });
     let uniqueSlug = slug;
@@ -19,7 +24,14 @@ export async function createLesson(moduleId, data) {
       count++;
     }
 
-    const mod = await Module.findById(moduleId).select('lessonIds').lean();
+    const mod = await Module.findById(moduleId).select('lessonIds course').lean();
+    if (!mod) return actionError('Module not found', 404);
+
+    const course = await Course.findById(mod.course).select('instructor').lean();
+    if (course?.instructor?.toString() !== session.user.id) {
+      return actionError('Forbidden', 403);
+    }
+
     const lessonCount = mod?.lessonIds?.length ?? 0;
 
     const lesson = await Lesson.create({
@@ -41,7 +53,22 @@ export async function createLesson(moduleId, data) {
 
 export async function reorderLessons(bulkUpdateData) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) return actionError('Unauthorized', 401);
+
     await dbConnect();
+
+    if (bulkUpdateData.length > 0) {
+      const lessonId = bulkUpdateData[0].id;
+      const mod = await Module.findOne({ lessonIds: lessonId }).select('course').lean();
+      if (mod) {
+        const course = await Course.findById(mod.course).select('instructor').lean();
+        if (course?.instructor?.toString() !== session.user.id) {
+          return actionError('Forbidden', 403);
+        }
+      }
+    }
+
     await Promise.all(
       bulkUpdateData.map(({ id, position }) =>
         Lesson.findByIdAndUpdate(id, { position }),
@@ -55,7 +82,19 @@ export async function reorderLessons(bulkUpdateData) {
 
 export async function deleteLesson(lessonId) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) return actionError('Unauthorized', 401);
+
     await dbConnect();
+
+    const mod = await Module.findOne({ lessonIds: lessonId }).select('course').lean();
+    if (mod) {
+      const course = await Course.findById(mod.course).select('instructor').lean();
+      if (course?.instructor?.toString() !== session.user.id) {
+        return actionError('Forbidden', 403);
+      }
+    }
+
     await Module.findOneAndUpdate(
       { lessonIds: lessonId },
       { $pull: { lessonIds: lessonId } },
