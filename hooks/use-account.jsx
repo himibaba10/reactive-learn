@@ -35,7 +35,7 @@ const useAccount = (action) => {
     }
   }, [state, router, action]);
 
-  return { formAction, formRef };
+  return { formAction, formRef, state };
 };
 
 export default useAccount;

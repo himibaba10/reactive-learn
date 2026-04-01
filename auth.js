@@ -52,6 +52,7 @@ export const {
   signIn,
   signOut,
   auth,
+  unstable_update,
 } = NextAuth({
   ...authConfig,
   providers: [
@@ -100,7 +101,11 @@ export const {
   callbacks: {
     ...authConfig.callbacks,
 
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger, session }) {
+      if (trigger === 'update' && session?.role) {
+        token.role = session.role;
+      }
+
       if (user && account) {
         if (account.provider === 'google') {
           try {

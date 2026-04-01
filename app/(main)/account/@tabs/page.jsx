@@ -3,6 +3,7 @@ import { getUserByEmail } from '@/queries/user.queries';
 import ChangePassword from '../_components/ChangePassword';
 import ContactInfo from '../_components/ContactInfo';
 import PersonalDetails from '../_components/PersonalDetails';
+import BecomeInstructor from '../_components/BecomeInstructor';
 
 async function Profile() {
   const session = await auth();
@@ -11,6 +12,10 @@ async function Profile() {
   return (
     <>
       <PersonalDetails user={user} />
+
+      {session?.user?.role === 'student' && (
+        <BecomeInstructor email={session?.user?.email} />
+      )}
 
       <div className='p-6 rounded-md shadow dark:shadow-gray-800 bg-background dark:bg-slate-900 mt-[30px]'>
         <div className='grid lg:grid-cols-2 grid-cols-1 gap-5'>

@@ -1,24 +1,51 @@
 'use server';
 
+import { auth, unstable_update } from '@/auth';
+
 import { actionError, actionSuccess } from '@/lib/actionResponse';
-import { auth } from '@/auth';
 import { getLoggedInUser } from '@/lib/my-helpers';
 import { User } from '@/models/user.model';
+import { updateContactInfo, updatePassword, updatePersonalDetail } from '@/queries/user.queries';
 import { dbConnect } from '@/service/mongo';
-import {
-  updateContactInfo,
-  updatePassword,
-  updatePersonalDetail,
-} from '@/queries/user.queries';
 import { v2 as cloudinary } from 'cloudinary';
 import { revalidatePath } from 'next/cache';
+
+export const changeRoleToInstructor = async (prevState, formData) => {
+  const email = formData.get('email');
+  try {
+    await dbConnect();
+    const session = await auth();
+
+    if (!session?.user?.email) {
+      return actionError('You must be logged in to perform this action.');
+    }
+
+    if (email !== session?.user?.email) {
+      return actionError('You are not authorized to update another user.');
+    }
+
+    await User.findOneAndUpdate({ email }, { role: 'teacher' });
+
+    try {
+      if (typeof unstable_update !== 'undefined') {
+        await unstable_update({ role: 'teacher' });
+      }
+    } catch (err) {
+      console.error('Failed to automatically update session', err);
+    }
+
+    return actionSuccess(null, 'Successfully upgraded to Instructor account.');
+  } catch (error) {
+    console.error('An error happened in changeRoleToInstructor action', error);
+    return actionError(error);
+  }
+};
 
 export const handleChangePersonalDetail = async (prevState, formData) => {
   try {
     await dbConnect();
     const session = await auth();
-    if (formData.get('email') !== session?.user?.email)
-      return actionError('You are not allowed to update data of another user.');
+    if (formData.get('email') !== session?.user?.email) return actionError('You are not allowed to update data of another user.');
 
     const info = {
       firstName: formData.get('firstName'),
@@ -33,9 +60,7 @@ export const handleChangePersonalDetail = async (prevState, formData) => {
 
     return actionSuccess(null, 'Data updated successfully.');
   } catch (error) {
-    console.error(
-      'An unexpected error happened in handleChangePersonalDetail action',
-    );
+    console.error('An unexpected error happened in handleChangePersonalDetail action');
     console.error(error);
     return actionError(error);
   }
@@ -45,8 +70,7 @@ export const handleChangePassword = async (prevState, formData) => {
   try {
     await dbConnect();
     const session = await auth();
-    if (formData.get('email') !== session?.user?.email)
-      return actionError('You are not allowed to update data of another user.');
+    if (formData.get('email') !== session?.user?.email) return actionError('You are not allowed to update data of another user.');
 
     const info = {
       email: formData.get('email'),
@@ -59,9 +83,7 @@ export const handleChangePassword = async (prevState, formData) => {
 
     return actionSuccess(null, 'Password changed successfully.');
   } catch (error) {
-    console.error(
-      'An unexpected error happened in handleChangePassword action',
-    );
+    console.error('An unexpected error happened in handleChangePassword action');
     console.error(error);
     return actionError(error);
   }
@@ -72,8 +94,7 @@ export const handleChangeContactInfo = async (prevState, formData) => {
     await dbConnect();
     const session = await auth();
     const email = formData.get('email');
-    if (email !== session?.user?.email)
-      return actionError('You are not allowed to update data of another user.');
+    if (email !== session?.user?.email) return actionError('You are not allowed to update data of another user.');
 
     const info = {
       phone: formData.get('phone'),
@@ -87,9 +108,7 @@ export const handleChangeContactInfo = async (prevState, formData) => {
 
     return actionSuccess(null, 'Contact info successfully.');
   } catch (error) {
-    console.error(
-      'An unexpected error happened in handleChangeContactInfo action',
-    );
+    console.error('An unexpected error happened in handleChangeContactInfo action');
     console.error(error);
     return actionError(error);
   }
@@ -119,4 +138,3 @@ export const updateProfilePicture = async (cloudinaryUrl) => {
     return actionError(error);
   }
 };
-
