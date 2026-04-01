@@ -4,7 +4,6 @@ import { actionError, actionSuccess } from '@/lib/actionResponse';
 import { formatAmountForStripe } from '@/lib/stripe-helpers';
 import { stripe } from '@/service/stripe';
 import { headers } from 'next/headers';
-import Stripe from 'stripe';
 
 import { auth } from '@/auth';
 import { Course } from '@/models/course.model';
@@ -14,35 +13,35 @@ export const createCheckoutSession = async (formData) => {
   try {
     await dbConnect();
     const session = await auth();
-  const courseId = formData.get('courseId');
-  const course = await Course.findById(courseId).lean();
+    const courseId = formData.get('courseId');
+    const course = await Course.findById(courseId).lean();
 
-  if (session?.user?.id === course?.instructor?.toString()) {
-    return actionError('You cannot enroll in your own course.');
-  }
+    if (session?.user?.id === course?.instructor?.toString()) {
+      return actionError('You cannot enroll in your own course.');
+    }
 
-  const origin = headers().get('origin');
+    const origin = headers().get('origin');
 
-  const checkoutSession = await stripe.checkout.sessions.create({
-    mode: 'payment',
-    submit_type: 'auto',
-    line_items: [
-      {
-        quantity: 1,
-        price_data: {
-          currency: 'BDT',
-          product_data: {
-            name: formData.get('courseName'),
+    const checkoutSession = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      submit_type: 'auto',
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: 'BDT',
+            product_data: {
+              name: formData.get('courseName'),
+            },
+            unit_amount: formatAmountForStripe(Number(formData.get('coursePrice'))),
           },
-          unit_amount: formatAmountForStripe(formData.get('coursePrice')),
         },
-      },
-    ],
-    success_url: `${origin}/enroll-success?session_id={CHECKOUT_SESSION_ID}&courseId=${formData.get('courseId')}`,
-    cancel_url: `${origin}/courses`,
-    ui_mode: 'hosted',
-    customer_email: formData.get('email'),
-  });
+      ],
+      success_url: `${origin}/enroll-success?session_id={CHECKOUT_SESSION_ID}&courseId=${formData.get('courseId')}`,
+      cancel_url: `${origin}/courses`,
+      ui_mode: 'hosted',
+      customer_email: formData.get('email'),
+    });
 
     return actionSuccess({
       client_secret: checkoutSession.client_secret,
@@ -56,7 +55,7 @@ export const createCheckoutSession = async (formData) => {
 export const createPaymentIntent = async (data) => {
   try {
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: formatAmountForStripe(data.coursePrice),
+      amount: formatAmountForStripe(Number(data.coursePrice)),
       automatic_payment_methods: { enabled: true },
       currency: 'BDT',
     });
@@ -69,4 +68,3 @@ export const createPaymentIntent = async (data) => {
     return actionError(error);
   }
 };
-
